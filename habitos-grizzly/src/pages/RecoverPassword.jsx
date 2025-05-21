@@ -1,0 +1,96 @@
+import axios from "axios";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
+export const RecoverPassword = () => {
+
+    const location = useLocation();
+    const query = new URLSearchParams(location.search);
+    const token = query.get("token"); // <- ¡Aquí tienes tu token!
+    const navigate = useNavigate();
+
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    const loginView = () => {
+        navigate("/login");
+    }
+
+    const updatePassword = async (e) => {
+        e.preventDefault();
+
+        if (newPassword !== confirmPassword) {
+            alert("Las contraseñas no coinciden");
+            return;
+        }
+
+        try {
+            const res = await axios.post("http://localhost:3001/api/user/resetPassword", {
+                token,              // <- Enviamos el token capturado
+                password: newPassword
+            });
+            const { message } = res.data;
+            alert(message);
+            loginView();
+        } catch (error) {
+            if (error.response) {
+                // Error desde el servidor con status 4xx o 5xx
+                alert(error.response.data.error);
+            } else if (error.request) {
+                // La petición se hizo pero no hubo respuesta
+                console.error('No hubo respuesta del servidor');
+            } else {
+                // Fallo al construir la petición
+                console.error('Error desconocido:', error.error);
+            }
+        }
+    }
+
+    return (
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="flex w-full max-w-5xl shadow-lg bg-white rounded-lg overflow-hidden">
+
+                <div className="w-full md:w-1/2 p-8">
+                    <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-lime-100 rounded-full">
+                        <svg className="w-6 h-6 text-lime-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 2a6 6 0 00-6 6v1.586l-.707.707A1 1 0 004 12h12a1 1 0 00.707-1.707L16 9.586V8a6 6 0 00-6-6zM8 16a2 2 0 104 0H8z" />
+                        </svg>
+                    </div>
+                    <h2 className="text-2xl font-bold text-center">Recover your password</h2>
+                    <p className="text-center text-gray-500 mb-6">Please enter your email to continue</p>
+
+                    <form onSubmit={updatePassword} className="space-y-4">
+                        <div>
+                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">New Password</label>
+                            <input
+                                type="password"
+                                placeholder="Nueva contraseña"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400"
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="passwordAgain" className="block text-sm font-medium text-gray-700">Confirm Password</label>
+                            <input
+                                type="password"
+                                placeholder="Confirmar contraseña"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-400"
+                            />
+                        </div>
+
+                        <button type="submit" className="w-full py-2 bg-lime-600 hover:bg-lime-400 text-white rounded-lg font-semibold cursor-pointer">Recover It</button>
+                    </form>
+                </div>
+
+                <div className="hidden md:block md:w-1/2 relative">
+                    <img src="/osito-grizzly-recover-password.png" alt="Graduation" className="h-full w-full object-cover" />
+
+                </div>
+            </div>
+        </div>
+    )
+}

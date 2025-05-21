@@ -16,6 +16,7 @@ export const ExcercisesList = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalOpenUpdate, setModalOpenUpdate] = useState(false);
     const [ejercicioDelete, setEjercicioDelete] = useState(false);
+    const [activeOption, setActiveOption] = useState('ejercicioList');
     const defaultValor = "";
     const navigate = useNavigate();
 
@@ -166,7 +167,7 @@ export const ExcercisesList = () => {
     return (
         <div className="flex h-screen">
 
-            <Home />
+            <Home activeOption={activeOption} setActiveOption={setActiveOption} />
             {/*HEADER*/}
 
             <main className="flex-1 p-6 overflow-y-auto">

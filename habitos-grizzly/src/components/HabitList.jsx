@@ -18,6 +18,7 @@ export const HabitList = () => {
     const [habitUnique, setHabitUnique] = useState(null);
     const [filtro, setFiltro] = useState("Todos");
     const efectoEjecutado = useRef(false);
+    const [activeOption, setActiveOption] = useState('habitList');
     //const [cargandoHabitos, setCargandoHabitos] = useState(true);
     const fechaActual = new Date().toISOString().split('T')[0];
 
@@ -203,7 +204,7 @@ export const HabitList = () => {
         <>
             <div className="flex h-screen">
 
-                <Home />
+                <Home activeOption={activeOption} setActiveOption={setActiveOption} />
 
                 <main className="flex-1 p-6 overflow-y-auto">
                     <div className="flex items-center justify-between mb-4">

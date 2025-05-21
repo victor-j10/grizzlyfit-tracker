@@ -16,6 +16,7 @@ export const EditProfile = () => {
     const { habitosBDM } = useAuth();
     const habitos = JSON.parse(localStorage.getItem("habitos") || "[]");
     const longitud = habitos.length;
+    const [activeOption, setActiveOption] = useState('editProfile');
 
     //console.log(habitosBDM.length);
     //console.log("local: ", habitos);
@@ -129,7 +130,7 @@ export const EditProfile = () => {
 
 
             <div className="flex h-screen">
-                <Home />
+                <Home activeOption={activeOption} setActiveOption={setActiveOption} />
 
                 <div className="w-4/5 max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* SECCIÓN 1: Info Personal */}

@@ -6,5 +6,6 @@ router.get('/vecesCompletada', rutinaCompletionsController.getCompletionsCount);
 router.put('/insertCompletions', rutinaCompletionsController.saveCompletionsCount);
 router.post('/resetRutinas', rutinaCompletionsController.resetCompletions);
 router.post('/daysRacha', rutinaCompletionsController.daysOfRacha);
+router.post('/daysOfRachaDaily', rutinaCompletionsController.daysOfRachaDaily);
 
 module.exports = router;

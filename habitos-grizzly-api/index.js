@@ -25,7 +25,7 @@ app.use('/api/habitUpdate', habitsRoutes);
 app.use('/api/updateProgreso', habitsRoutes);
 app.use('/api/habitDelete', habitsRoutes);
 //ejercicios
-app.use('/api/ejerciciosById', excercisesRoutes);
+app.use('/api/ejercicios', excercisesRoutes);
 app.use('/api/excerciseInsert', excercisesRoutes);
 app.use('/api/excerciseUpdate', excercisesRoutes);
 app.use('/api/excerciseDelete', excercisesRoutes);

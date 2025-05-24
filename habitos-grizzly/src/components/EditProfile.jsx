@@ -142,6 +142,10 @@ export const EditProfile = () => {
                                 <input
                                     name="nombre"
                                     type="text"
+                                    value={usuarioSesion.nombre}
+                                    onChange={(e) => setUsuarioSesion({
+                                        ...usuarioSesion, nombre: e.target.value
+                                    })}
                                     placeholder="Tu nombre"
                                     className="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-neutral-400 focus:outline-none"
                                 />
@@ -151,6 +155,10 @@ export const EditProfile = () => {
                                 <input
                                     name="correo"
                                     type="email"
+                                    value={usuarioSesion.correo}
+                                    onChange={(e) => setUsuarioSesion({
+                                        ...usuarioSesion, correo: e.target.value
+                                    })}
                                     placeholder="correo@ejemplo.com"
                                     className="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-neutral-400 focus:outline-none"
                                 />

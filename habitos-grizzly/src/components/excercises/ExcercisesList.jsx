@@ -51,7 +51,7 @@ export const ExcercisesList = () => {
             return;
         }
 
-        fetch("http://localhost:3001/api/ejerciciosById/listaEjercicios", {
+        fetch("http://localhost:3001/api/ejercicios/listaEjercicios", {
             method: "POST",
             //el tipo de contenido
             headers: { "Content-Type": "application/json" },
@@ -175,7 +175,7 @@ export const ExcercisesList = () => {
                     <h1 className="text-2xl font-bold mb-6">Resumen de Ejercicios</h1>
 
                     <button
-                        
+                        onClick={abrirModal}
                         className="border border-gray-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lime-500 hover:bg-lime-500 hover:text-white hover:outline-lime-600 cursor-pointer">
                         Nuevo Ejercicio
                     </button>
@@ -257,13 +257,13 @@ Estado */}
                                 {/* Botones */}
                                 <div className="flex gap-2">
                                     <button
-
+                                        onClick={() => obtenerEjercicio(ejercicio)}
                                         className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-500 hover:text-white transition cursor-pointer"
                                     >
                                         Actualizar
                                     </button>
                                     <button
-
+                                        onClick={eliminar}
                                         className="px-4 py-2 text-sm font-medium text-red-600 border border-red-300 rounded-lg hover:bg-red-500 hover:text-white transition cursor-pointer"
                                     >
                                         Eliminar
@@ -276,6 +276,14 @@ Estado */}
 
             </main >
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+
+            {modalOpen && (
+                <CreateExcercises cerrarModal={cerrarModal} />
+            )}
+
+            {modalOpenUpdate && (
+                <UpdateExcercises cerrarModalUpdate={cerrarModalUpdate} ejerciciosUnique={ejerciciosUnique} setEjerciciosUnique={setEjerciciosUnique} />
+            )}
         </div>
 
     )

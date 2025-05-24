@@ -49,7 +49,7 @@ export const CreateExcercises = ({ cerrarModal }) => {
                     >
                         &times;
                     </button>
-                    <h3 className="text-lg font-semibold mb-4 text-center">Registrar Nuevo Hábito</h3>
+                    <h3 className="text-lg font-semibold mb-4 text-center">Registrar Nuevo Ejercicio</h3>
                     <form onSubmit={handleSubmit}>
                         {/*Nombre*/}
                         <label htmlFor="nombre" className="block mb-1 font-medium text-gray-700">

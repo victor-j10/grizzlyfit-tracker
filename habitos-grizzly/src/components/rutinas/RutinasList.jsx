@@ -3,6 +3,7 @@ import { useAuth } from "../../contexts/AuthContext"
 import { CreateRutina } from "./CreateRutina";
 import { Home } from "../Home";
 import axios from "axios";
+import { UpdateRutina } from "./UpdateRutina";
 
 export const RutinaList = () => {
     const { usuario } = useAuth();
@@ -11,7 +12,9 @@ export const RutinaList = () => {
     const [deleteRutina, setDeleteRutina] = useState(false);
     const [countRutina, setCountRutina] = useState(false);
     const [vecesCompletada, setVecesCompletada] = useState([]);
+    const [rutinasTemp, setRutinasTemp] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
+    const [modalUpdate, setModalUpdate] = useState(false);
     const [activeOption, setActiveOption] = useState('gestionRutina');
 
     const abrirModal = () => {
@@ -20,6 +23,14 @@ export const RutinaList = () => {
 
     const cerrarModal = () => {
         setModalOpen(false);
+    }
+
+    const abrirModalUpdate = () => {
+        setModalUpdate(true)
+    };
+
+    const cerrarModalUpdate = () => {
+        setModalUpdate(false);
     }
 
     const date = new Date();
@@ -100,7 +111,7 @@ export const RutinaList = () => {
                 const response = await axios.post('http://localhost:3001/api/rutinas/', { id_usuario });
                 const { rutinasUser, vecesCompletada } = response.data;
                 const row1 = vecesCompletada[0];
-                //console.log(row1);
+                console.log(rutinasUser);
                 setRutinas(rutinasUser);
                 setVecesCompletada(row1);
 
@@ -121,7 +132,7 @@ export const RutinaList = () => {
 
         fetchRutinas();
 
-    }, [id_usuario, modalOpen, deleteRutina, countRutina]);
+    }, [id_usuario, modalOpen, deleteRutina, countRutina, modalUpdate]);
 
 
     const filteredByDay = rutinas.filter((rut) => {
@@ -135,13 +146,18 @@ export const RutinaList = () => {
         return rutina;
     })
 
+    const editarRutina = (rutina) => {
+        setRutinasTemp(rutina);
+        abrirModalUpdate();
+    }
+
 
     return (
         <div className="flex h-screen">
 
             {/*HEADER*/}
 
-            <Home activeOption={activeOption} setActiveOption={setActiveOption}/>
+            <Home activeOption={activeOption} setActiveOption={setActiveOption} />
 
             {/*Sección de visualización de rutinas*/}
 
@@ -181,7 +197,7 @@ export const RutinaList = () => {
                             <div>
                                 <p className="text-sm text-gray-500">Racha Máxima</p>
                                 <p className="text-xl font-bold">
-                                    {vecesCompletada.racha_max} Días
+                                    {vecesCompletada.racha_max} {vecesCompletada.racha_max === 1 ? ("Día") : ("Días")}
                                 </p>
                             </div>
                         </div>
@@ -221,9 +237,12 @@ export const RutinaList = () => {
                                 <button
                                     onClick={() => marcarComoCompletada(rutina.id_rutina)} // tu función
                                     className=
-                                    "px-4 py-2 text-sm font-medium text-green-700 border border-green-300 rounded-lg hover:bg-green-500 hover:text-white transition"
+                                    {`px-4 py-2 text-sm font-medium 
+                                        ${rutina.completado === 1 ? "text-green-700 hover:bg-green-500 border-green-300" : "text-red-700 hover:bg-red-500 border-red-300"} border  rounded-lg hover:text-white transition`}
                                 >
-                                    ✅ Completar
+                                    {
+                                    rutina.completad === 1 ? "✅ Completado" : "❌ Completado"
+                                    }
 
                                 </button>
 
@@ -304,6 +323,10 @@ export const RutinaList = () => {
 
             {modalOpen && (
                 <CreateRutina cerrarModal={cerrarModal} />
+            )}
+
+            {modalUpdate && (
+                <UpdateRutina rutinasTemp={rutinasTemp} setRutinasTemp={setRutinasTemp} cerrarModalUpdate={cerrarModalUpdate} />
             )}
 
 

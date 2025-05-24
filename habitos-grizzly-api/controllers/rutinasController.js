@@ -86,8 +86,10 @@ exports.getRutinasUser = async (req, res) => {
 
     try {
         const [rows] = await db.promise().query(
-            'SELECT r.id_rutina, r.nombre as nombre_rutina, r.tipo_rutina, r.dia, r.descripcion, r_e.orden, e.nombre, e.id_ejercicio, e.sets, e.reps, r_e.id_rutinas_ejercicios ,r_e.duracion_segundos FROM usuarios_rutinas as u_r JOIN usuarios as u ON u.id_usuario = u_r.usuario_id JOIN rutinas as r ON r.id_rutina = u_r.rutina_id JOIN rutinas_ejercicios as r_e ON r_e.rutina_id = u_r.rutina_id JOIN ejercicios as e ON e.id_ejercicio = r_e.ejercicio_id WHERE u.id_usuario = ? ORDER BY r.num_dia, r_e.orden',
+            'SELECT r.id_rutina, r.nombre as nombre_rutina, r.tipo_rutina, r.dia, r.descripcion, r_e.orden, e.nombre, e.id_ejercicio, e.sets, e.reps, r_e.id_rutinas_ejercicios ,r_e.duracion_segundos, rCom.completado FROM usuarios_rutinas as u_r JOIN usuarios as u ON u.id_usuario = u_r.usuario_id JOIN rutinas as r ON r.id_rutina = u_r.rutina_id JOIN rutinas_ejercicios as r_e ON r_e.rutina_id = u_r.rutina_id JOIN ejercicios as e ON e.id_ejercicio = r_e.ejercicio_id JOIN rutina_completions as rCom ON rCom.id_rutina = u_r.rutina_id WHERE u.id_usuario = ? ORDER BY r.num_dia, r_e.orden',
             [id_usuario]);
+
+
 
         //console.log(rows);
 
@@ -129,6 +131,8 @@ exports.getRutinasUser = async (req, res) => {
 
         const vecesCompletada = await getCompletionsCount(id_usuario);
         //console.log(vecesCompletada);
+
+
 
         //enviamos la respuesta al front
         res.json({ rutinasUser: rutinasArray, vecesCompletada: vecesCompletada });
@@ -172,6 +176,53 @@ exports.deleteRutina = async (req, res) => {
         )
 
         res.status(200).json({ message: 'Rutina eliminada con éxito' });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: "Error al eliminar la rutina" })
+    }
+}
+
+exports.updateRutina = async (req, res) => {
+    const { nombreRutina, tipo_rutina, descripcion, ejercicios, id_rutina } = req.body;
+    //console.log(id_rutina)
+    //console.log(id_usuario)
+    console.log(nombreRutina);
+    console.log(tipo_rutina);
+    console.log(descripcion);
+    console.log(ejercicios);
+    console.log(id_rutina);
+
+    try {
+
+        if (!nombreRutina || !tipo_rutina || !descripcion) {
+            return res.status(401).json({ message: 'Los campos no pueden estar vacíos!' });
+        }
+
+        //update a tablas rutinas
+        const [updateRutina] = await db.promise().query('UPDATE rutinas SET nombre = ?, tipo_rutina = ?, descripcion = ? WHERE id_rutina = ?',
+            [nombreRutina, tipo_rutina, descripcion, id_rutina]
+        );
+
+        //console.log(updateRutina);
+
+        const updateRutinaEjerciciosA = [];
+
+        //update a rutinas_ejercicios
+        for (let i = 0; i < ejercicios.length; i++) {
+            const id_ejercicio = ejercicios[i].ejercicio;
+            const orden = ejercicios[i].orden;
+            const duracion_segundos = ejercicios[i].duracion_segundos;
+            const id_rutinas_ejercicios = ejercicios[i].id_rutinas_ejercicios;
+            const [updateRutinaEjercicios] = await db.promise().query('UPDATE rutinas_ejercicios SET ejercicio_id = ?, orden = ?, duracion_segundos = ? WHERE id_rutinas_ejercicios = ?',
+                [id_ejercicio, orden, duracion_segundos, id_rutinas_ejercicios]
+            );
+
+            updateRutinaEjerciciosA.push(updateRutinaEjercicios);
+        }
+
+        //console.log(updateRutinaEjerciciosA);
+
+        res.status(200).json({ message: 'Rutina actualizada con éxito', updateRutina, updateRutinaEjerciciosA });
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: "Error al eliminar la rutina" })

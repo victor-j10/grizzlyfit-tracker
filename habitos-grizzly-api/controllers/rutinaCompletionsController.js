@@ -153,6 +153,11 @@ exports.daysOfRachaDaily = async (req, res) => {
         }
 
         const rutinaActual = fetchRutinas.filter((rut) => rut.dia.toLowerCase() === weekdays[day]);
+
+        console.log(rutinaActual);
+        if (rutinaActual.length === 0) {
+            return res.json({ message: 'No tienes rutinas para hoy' });
+        }
         const id_rutina = rutinaActual[0].id_rutina
 
         const [fetchRutinasActual] = await db.promise().query('SELECT * FROM rutina_completions WHERE id_usuario = ? AND id_rutina = ?', [id_usuario, id_rutina]);

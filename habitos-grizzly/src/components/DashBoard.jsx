@@ -104,6 +104,18 @@ export const DashBoard = () => {
         return acc;
     }, []);
 
+    const porcentaje2 = Math.floor((habits.filter(h => h.cumplido === 1).length / habits.length) * 100) || 0;
+    const porcentaje = Math.floor((habits.filter(h => h.progreso === 100).length / habits.length) * 100) || 0;
+    const porcentaje3 = Math.floor((rutinas.length / 7) * 100) || 0;
+    const radius = 60;
+    const stroke = 10;
+    const normalizedRadius = radius - stroke / 2;
+    const circumference = normalizedRadius * 2 * Math.PI;
+    const strokeDashoffset = circumference - (porcentaje / 100) * circumference;
+    const strokeDashoffset2 = circumference - (porcentaje2 / 100) * circumference;
+    const strokeDashoffset3 = circumference - (porcentaje3 / 100) * circumference;
+
+
     return (
         <>
             <div className="flex h-screen">
@@ -144,11 +156,39 @@ export const DashBoard = () => {
                             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                                 <h2 className="text-lg font-semibold mb-2">Progreso Estimado</h2>
                                 <div className="flex flex-col items-center justify-center">
-                                    <div className="w-36 h-36 rounded-full border-8 border-lime-500 border-t-gray-200 relative">
-                                        <span className="absolute inset-0 flex items-center justify-center text-3xl font-bold text-lime-600">
-                                            {Math.floor((habits.filter(h => h.progreso === 100).length / habits.length) * 100) || 0}%
-                                        </span>
+                                    <div className="relative w-36 h-36">
+                                        <svg height="100%" width="100%" viewBox="0 0 120 120">
+                                            {/* Fondo gris */}
+                                            <circle
+                                                stroke="#e5e7eb"
+                                                fill="transparent"
+                                                strokeWidth={stroke}
+                                                r={normalizedRadius}
+                                                cx="60"
+                                                cy="60"
+                                                strokeDasharray={circumference}
+                                                strokeDashoffset={0}
+                                            />
+                                            {/* Progreso verde */}
+                                            <circle
+                                                stroke="#84cc16"
+                                                fill="transparent"
+                                                strokeWidth={stroke}
+                                                r={normalizedRadius}
+                                                cx="60"
+                                                cy="60"
+                                                strokeDasharray={circumference}
+                                                strokeDashoffset={strokeDashoffset}
+                                                strokeLinecap="round"
+                                                transform="rotate(-90 60 60)"
+                                            />
+                                        </svg>
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <span className="text-2xl font-bold text-lime-600">{porcentaje}%</span>
+                                        </div>
                                     </div>
+
+
                                     <p className="mt-4 text-sm text-gray-500">Porcentaje de hábitos cumplidos</p>
                                 </div>
                             </div>
@@ -157,10 +197,36 @@ export const DashBoard = () => {
                             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                                 <h2 className="text-lg font-semibold mb-2">Progreso Real</h2>
                                 <div className="flex flex-col items-center justify-center">
-                                    <div className="w-36 h-36 rounded-full border-8 border-lime-500 border-t-gray-200 relative">
-                                        <span className="absolute inset-0 flex items-center justify-center text-3xl font-bold text-lime-600">
-                                            {Math.floor((habits.filter(h => h.cumplido === 1).length / habits.length) * 100) || 0}%
-                                        </span>
+                                    <div className="relative w-36 h-36">
+                                        <svg height="100%" width="100%" viewBox="0 0 120 120">
+                                            {/* Fondo gris */}
+                                            <circle
+                                                stroke="#e5e7eb"
+                                                fill="transparent"
+                                                strokeWidth={stroke}
+                                                r={normalizedRadius}
+                                                cx="60"
+                                                cy="60"
+                                                strokeDasharray={circumference}
+                                                strokeDashoffset={0}
+                                            />
+                                            {/* Progreso verde */}
+                                            <circle
+                                                stroke="#84cc16"
+                                                fill="transparent"
+                                                strokeWidth={stroke}
+                                                r={normalizedRadius}
+                                                cx="60"
+                                                cy="60"
+                                                strokeDasharray={circumference}
+                                                strokeDashoffset={strokeDashoffset2}
+                                                strokeLinecap="round"
+                                                transform="rotate(-90 60 60)"
+                                            />
+                                        </svg>
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <span className="text-2xl font-bold text-lime-600">{porcentaje2}%</span>
+                                        </div>
                                     </div>
                                     <p className="mt-4 text-sm text-gray-500">Porcentaje de hábitos cumplidos</p>
                                 </div>
@@ -234,10 +300,36 @@ export const DashBoard = () => {
                             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                                 <h2 className="text-lg font-semibold mb-4 text-center">Porcentaje de Rutinas</h2>
                                 <div className="flex flex-col items-center justify-center">
-                                    <div className="w-36 h-36 rounded-full border-8 border-lime-500 border-t-gray-200 relative">
-                                        <span className="absolute inset-0 flex items-center justify-center text-3xl font-bold text-lime-600">
-                                            {Math.floor((rutinas.length / 7) * 100) || 0}%
-                                        </span>
+                                    <div className="relative w-36 h-36">
+                                        <svg height="100%" width="100%" viewBox="0 0 120 120">
+                                            {/* Fondo gris */}
+                                            <circle
+                                                stroke="#e5e7eb"
+                                                fill="transparent"
+                                                strokeWidth={stroke}
+                                                r={normalizedRadius}
+                                                cx="60"
+                                                cy="60"
+                                                strokeDasharray={circumference}
+                                                strokeDashoffset={0}
+                                            />
+                                            {/* Progreso verde */}
+                                            <circle
+                                                stroke="#84cc16"
+                                                fill="transparent"
+                                                strokeWidth={stroke}
+                                                r={normalizedRadius}
+                                                cx="60"
+                                                cy="60"
+                                                strokeDasharray={circumference}
+                                                strokeDashoffset={strokeDashoffset3}
+                                                strokeLinecap="round"
+                                                transform="rotate(-90 60 60)"
+                                            />
+                                        </svg>
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <span className="text-2xl font-bold text-lime-600">{porcentaje3}%</span>
+                                        </div>
                                     </div>
                                     <p className="mt-4 text-sm text-gray-500 text-center">
                                         Porcentaje de días de la semana con al menos una rutina

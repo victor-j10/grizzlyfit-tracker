@@ -3,7 +3,7 @@ const moment = require('moment');
 
 exports.getCompletionsCount = async (id_usuario) => {
     const [rows] = await db.promise().query(
-        'SELECT * FROM rutina_completions WHERE id_usuario = ?', [id_usuario]
+        'SELECT * FROM rutina_completions WHERE id_usuario = ? ORDER BY completado desc', [id_usuario]
     );
     return rows;
 }

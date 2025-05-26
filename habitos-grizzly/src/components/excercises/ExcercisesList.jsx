@@ -185,7 +185,7 @@ export const ExcercisesList = () => {
                     {/* Cumplidos */}
                     <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-300">
                         <div className="flex items-center space-x-4">
-                            <div className="bg-green-100 text-green-600 p-3 rounded-full">
+                            <div className="bg-gray-100 text-gray-600 p-3 rounded-full">
                                 <span className="material-icons">numbers</span>
                             </div>
                             <div>

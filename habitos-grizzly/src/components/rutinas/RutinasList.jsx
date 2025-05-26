@@ -111,6 +111,7 @@ export const RutinaList = () => {
                 const response = await axios.post('http://localhost:3001/api/rutinas/', { id_usuario });
                 const { rutinasUser, vecesCompletada } = response.data;
                 const row1 = vecesCompletada[0];
+                console.log(row1);
                 console.log(rutinasUser);
                 setRutinas(rutinasUser);
                 setVecesCompletada(row1);
@@ -137,9 +138,11 @@ export const RutinaList = () => {
 
     const filteredByDay = rutinas.filter((rut) => {
         const rutina = rut.dia.toLowerCase() === weekdays[day];
+        
 
         return rutina;
     })
+    console.log(filteredByDay)
 
     const excludeDay = rutinas.filter((rut) => {
         const rutina = rut.dia.toLowerCase() !== weekdays[day];
@@ -182,7 +185,13 @@ export const RutinaList = () => {
                             <div>
                                 <p className="text-sm text-gray-500">Días de Racha</p>
                                 <p className="text-xl font-bold">
-                                    {vecesCompletada.racha_actual} {vecesCompletada.racha_actual === 1 ? ("Día") : ("Días")}
+                                    {
+                                        vecesCompletada?.racha_actual ?
+                                            vecesCompletada?.racha_actual === 1 ? vecesCompletada?.racha_actual + " Día"
+                                                : vecesCompletada?.racha_actual + " Días"
+                                            : "0 Días"
+
+                                    }
                                 </p>
                             </div>
                         </div>
@@ -197,7 +206,13 @@ export const RutinaList = () => {
                             <div>
                                 <p className="text-sm text-gray-500">Racha Máxima</p>
                                 <p className="text-xl font-bold">
-                                    {vecesCompletada.racha_max} {vecesCompletada.racha_max === 1 ? ("Día") : ("Días")}
+                                    {
+                                        vecesCompletada?.racha_max ?
+                                            vecesCompletada?.racha_max === 1 ? vecesCompletada?.racha_max + " Día"
+                                                : vecesCompletada?.racha_max + " Días"
+                                            : "0 días"
+
+                                    }
                                 </p>
                             </div>
                         </div>
@@ -241,7 +256,7 @@ export const RutinaList = () => {
                                         ${rutina.completado === 1 ? "text-green-700 hover:bg-green-500 border-green-300" : "text-red-700 hover:bg-red-500 border-red-300"} border  rounded-lg hover:text-white transition`}
                                 >
                                     {
-                                    rutina.completad === 1 ? "✅ Completado" : "❌ Completado"
+                                        rutina.completado === 1 ? "✅ Completado" : "❌ Completado"
                                     }
 
                                 </button>

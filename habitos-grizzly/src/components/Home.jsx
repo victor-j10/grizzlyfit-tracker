@@ -9,8 +9,8 @@ export const Home = ({ activeOption, setActiveOption }) => {
     const { usuario, logout } = useAuth();
     const navigate = useNavigate();
 
-    const editProfile = () => {
-        navigate("/editProfile");
+    const dashboard = () => {
+        navigate("/dashboard");
     }
 
     const listaHabitos = () => {
@@ -25,6 +25,10 @@ export const Home = ({ activeOption, setActiveOption }) => {
         navigate("/gestionRutina");
     }
 
+    const editProfile = () => {
+        navigate("/editProfile");
+    }
+
     return (
 
         <aside className="w-1/5 bg-white border-r border-gray-200 shadow-sm">
@@ -35,7 +39,7 @@ export const Home = ({ activeOption, setActiveOption }) => {
 
                 <a
                     onClick={() => {
-                        listaHabitos();
+                        dashboard();
                         setActiveOption('dashboard');
                     }}
                     className=

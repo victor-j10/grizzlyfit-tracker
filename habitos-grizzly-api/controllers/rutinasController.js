@@ -110,6 +110,7 @@ exports.getRutinasUser = async (req, res) => {
                     dia: row.dia,
                     descripcion: row.descripcion,
                     id_rutina: row.id_rutina,
+                    completado: row.completado,
                     ejercicios: [],
                 });
             }

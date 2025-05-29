@@ -37,7 +37,7 @@ export const EditProfile = () => {
         const newPasswordAgain = form.newPasswordAgain.value;
 
         try {
-            const response = await axios.put('http://localhost:3001/api/user/changePassword', { oldPassword, newPassword, newPasswordAgain, id });
+            const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/user/changePassword`, { oldPassword, newPassword, newPasswordAgain, id });
             const { message } = response.data;
             alert(message);
             closeModalPassword();
@@ -76,7 +76,7 @@ export const EditProfile = () => {
         /*if (efectoEjecutado.current) return; // evita segunda ejecución en modo dev
         efectoEjecutado.current = true;*/
 
-        fetch("http://localhost:3001/api/userById/usuarioPorId", {
+        fetch(`${import.meta.env.VITE_API_URL}/api/userById/usuarioPorId`, {
             method: "POST",
             //el tipo de contenido
             headers: { "Content-Type": "application/json" },
@@ -106,7 +106,7 @@ export const EditProfile = () => {
         const correo = form.correo.value;
         const id_usuario = usuario.id_usuario;
 
-        await fetch("http://localhost:3001/api/updateUsuario/usuarioUpdate", {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/updateUsuario/usuarioUpdate`, {
             method: "PUT",
             //el tipo de contenido
             headers: { "Content-Type": "application/json" },

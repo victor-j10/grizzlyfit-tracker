@@ -11,7 +11,7 @@ export const UpdateExcercises = ({ cerrarModalUpdate, ejerciciosUnique, setEjerc
         e.preventDefault();
         //console.log("actualizar:", habitUnique);
         //setHabitUnique(actualizarProgresoUniqueEnBd(habitUnique));
-        const res = await fetch(`http://localhost:3001/api/excerciseUpdate/updateExcercise/${ejerciciosUnique.id_ejercicio}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/excerciseUpdate/updateExcercise/${ejerciciosUnique.id_ejercicio}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

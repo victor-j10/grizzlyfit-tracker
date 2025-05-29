@@ -39,7 +39,7 @@ export const HabitList = () => {
          }*/
 
         //si hay un valor, enviamos la consulta al backend, junto a la categoría y el id.
-        fetch("http://localhost:3001/api/habitsByCategoria/listaHabitosPorCategoria", {
+        fetch(`${import.meta.env.VITE_API_URL}/api/habitsByCategoria/listaHabitosPorCategoria`, {
             method: "POST",
             //el tipo de contenido
             headers: { "Content-Type": "application/json" },
@@ -77,7 +77,7 @@ export const HabitList = () => {
             const newProgreso = calcularProgreso(fecha_inicioL, fecha_finL);
             //console.log(newProgreso);
 
-            await fetch("http://localhost:3001/api/updateProgreso/progresoUpdate", {
+            await fetch(`${import.meta.env.VITE_API_URL}/api/updateProgreso/progresoUpdate`, {
                 method: "PUT",
                 //el tipo de contenido
                 headers: { "Content-Type": "application/json" },
@@ -102,7 +102,7 @@ export const HabitList = () => {
         /*if (efectoEjecutado.current) return; // evita segunda ejecución en modo dev
         efectoEjecutado.current = true;*/
 
-        fetch("http://localhost:3001/api/habitsById/listaHabitos", {
+        fetch(`${import.meta.env.VITE_API_URL}/api/habitsById/listaHabitos`, {
             method: "POST",
             //el tipo de contenido
             headers: { "Content-Type": "application/json" },
@@ -185,7 +185,7 @@ export const HabitList = () => {
     const eliminar = async (id_habito) => {
         setDeleteHabito(true);
         if (confirm("¿Desea eliminar este hábito?")) {
-            const res = await fetch(`http://localhost:3001/api/habitDelete/deleteHabit/${id_habito}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/habitDelete/deleteHabit/${id_habito}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",

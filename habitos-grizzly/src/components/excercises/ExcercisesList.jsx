@@ -51,7 +51,7 @@ export const ExcercisesList = () => {
             return;
         }
 
-        fetch("http://localhost:3001/api/ejercicios/listaEjercicios", {
+        fetch(`${import.meta.env.VITE_API_URL}/api/ejercicios/listaEjercicios`, {
             method: "POST",
             //el tipo de contenido
             headers: { "Content-Type": "application/json" },
@@ -76,7 +76,7 @@ export const ExcercisesList = () => {
     const eliminar = async (id_ejercicio) => {
         setEjercicioDelete(true);
         if (confirm("¿Desea eliminar este ejercicio?")) {
-            const res = await fetch(`http://localhost:3001/api/excerciseDelete/deleteExcercise/${id_ejercicio}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/excerciseDelete/deleteExcercise/${id_ejercicio}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -121,7 +121,7 @@ export const ExcercisesList = () => {
         //1. Validar categoria --> si el ejercicios busqueda es menor que cero quiere decir que el filtro de la busqueda no ha sido usado
 
         console.log("sigue");
-        fetch("http://localhost:3001/api/ejerciciosByCategoria/listaEjerciciosPorCategoria", {
+        fetch(`${import.meta.env.VITE_API_URL}/api/ejerciciosByCategoria/listaEjerciciosPorCategoria`, {
             method: "POST",
             //el tipo de contenido
             headers: { "Content-Type": "application/json" },

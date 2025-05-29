@@ -11,7 +11,7 @@ export const UpdateRutina = ({ rutinasTemp, setRutinasTemp, cerrarModalUpdate })
     useEffect(() => {
         const fetchEjercicio = async () => {
             try {
-                const response = await axios.post('http://localhost:3001/api/ejercicios/listaEjercicios', { id });
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/ejercicios/listaEjercicios`, { id });
                 setEjerciciosDisponibles(response.data);
             } catch (error) {
                 if (error.response) {
@@ -63,7 +63,7 @@ export const UpdateRutina = ({ rutinasTemp, setRutinasTemp, cerrarModalUpdate })
 
         try {
 
-            const response = await axios.put('http://localhost:3001/api/rutinas/updateRutina', { nombreRutina, tipo_rutina, descripcion, ejercicios, id, id_rutina });
+            const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/rutinas/updateRutina`, { nombreRutina, tipo_rutina, descripcion, ejercicios, id, id_rutina });
             const { message } = response.data;
             console.log(response.data);
             alert(message);

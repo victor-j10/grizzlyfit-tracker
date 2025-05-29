@@ -9,7 +9,7 @@ export const UpdateHabits = ({ cerrarModalUpdate, habitUnique, setHabitUnique })
         e.preventDefault();
         //console.log("actualizar:", habitUnique);
         //setHabitUnique(actualizarProgresoUniqueEnBd(habitUnique));
-        const res = await fetch(`http://localhost:3001/api/habitUpdate/updateHabit/${habitUnique.id_habito}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/habitUpdate/updateHabit/${habitUnique.id_habito}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

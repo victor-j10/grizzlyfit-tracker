@@ -29,7 +29,7 @@ export function Login() {
         //try catch para realizarla conexión a la api.
         try {
             //activamos el await utilizando un fetch (metodo usado para acceder a las api's)
-            const res = await fetch("http://localhost:3001/api/user/usuarios", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/usuarios`, {
                 //le indicamos el método por el cual viajan las variables
                 method: "POST",
                 //el tipo de contenido

@@ -35,7 +35,6 @@ export const RutinaList = () => {
 
     const date = new Date();
     const day = date.getDay();
-    //console.log(day);
 
     const weekdays = [
         "domingo",
@@ -103,16 +102,14 @@ export const RutinaList = () => {
             try {
                 const reset = await axios.post(`${import.meta.env.VITE_API_URL}/api/rutinaCompletions/resetRutinas`, { id_usuario });
                 const { message } = reset.data;
-                console.log(message);
+                
 
                 const daysOfRacha = await axios.post(`${import.meta.env.VITE_API_URL}/api/rutinaCompletions/daysOfRachaDaily`, { id_usuario });
-                console.log(daysOfRacha.data);
+                
 
                 const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/rutinas/`, { id_usuario });
                 const { rutinasUser, vecesCompletada } = response.data;
                 const row1 = vecesCompletada[0];
-                console.log(row1);
-                console.log(rutinasUser);
                 setRutinas(rutinasUser);
                 setVecesCompletada(row1);
 
@@ -142,7 +139,7 @@ export const RutinaList = () => {
 
         return rutina;
     })
-    console.log(filteredByDay)
+    
 
     const excludeDay = rutinas.filter((rut) => {
         const rutina = rut.dia.toLowerCase() !== weekdays[day];

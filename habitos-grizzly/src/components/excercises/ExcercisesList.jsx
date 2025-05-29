@@ -42,7 +42,6 @@ export const ExcercisesList = () => {
 
     const obtenerEjercicio = (ejercicio) => {
         abrirModalUpdate();
-        //console.log(ejercicio);
         setEjerciciosUnique(ejercicio);
     }
 
@@ -63,7 +62,7 @@ export const ExcercisesList = () => {
                 setEjercicios(data);
                 //actualizarProgresoEnBd(data);
                 //setHabits(data);
-                //console.log(data);
+                
 
             })
             .catch((err) => {
@@ -92,7 +91,6 @@ export const ExcercisesList = () => {
 
     const buscarPorNombre = (e) => {
         //alert(e);
-        //console.log("valor al buscar: ", filtroCategoria);
         const resultados = ejercicios.filter(ejercicio =>
             ejercicio.nombre.toLowerCase().includes(e.toLowerCase())
         );
@@ -115,12 +113,9 @@ export const ExcercisesList = () => {
     };
 
     const filtrarPorCategoria = (categoria) => {
-        console.log(categoria);
-        console.log(ejerciciosBusqueda.length);
-
+        
         //1. Validar categoria --> si el ejercicios busqueda es menor que cero quiere decir que el filtro de la busqueda no ha sido usado
 
-        console.log("sigue");
         fetch(`${import.meta.env.VITE_API_URL}/api/ejerciciosByCategoria/listaEjerciciosPorCategoria`, {
             method: "POST",
             //el tipo de contenido
@@ -135,9 +130,7 @@ export const ExcercisesList = () => {
                         categoriaFiltro.value = ""
                         setEjercicios(data);
                         setEjerciciosBusqueda([]);
-                        console.log("nuevo valor: ", ejerciciosBusqueda.length)
                     } else if (ejerciciosBusqueda.length > 0) {
-                        //console.log(ejerciciosBusqueda[0].categoria);
                         //validar aquí también valores dentro del array temporal
                         //se soluciona con un map
                         const resultados = ejerciciosBusqueda.filter(ejercicio =>
@@ -149,9 +142,6 @@ export const ExcercisesList = () => {
                     }
                     //
 
-                    //console.log(data);
-                    //console.log(categoria);
-                    /*console.log(JSON.stringify({ categoria, id }));*/
                     //si no, le decimos que no existen datos con esa categoría
                 } else {
                     alert("No existen datos con la categoría seleccionada");

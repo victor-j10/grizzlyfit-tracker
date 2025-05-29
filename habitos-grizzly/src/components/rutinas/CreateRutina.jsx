@@ -44,7 +44,7 @@ export const CreateRutina = ({ cerrarModal }) => {
             form.dia.value = "";
             form.descripcion.value = "";
             alert(data.message);
-            console.log(data);
+            
             if (!id_rutina) {
                 return cerrarModal();
             }

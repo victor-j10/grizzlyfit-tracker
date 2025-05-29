@@ -15,7 +15,7 @@ export const ForgotPassword = () => {
     }
 
     const recoverPasswordGo = async (e) => {
-        console.log("hola");
+        
         e.preventDefault();
         const form = e.target;
         const email = form.email.value;

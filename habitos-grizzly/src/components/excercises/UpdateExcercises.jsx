@@ -1,6 +1,5 @@
 export const UpdateExcercises = ({ cerrarModalUpdate, ejerciciosUnique, setEjerciciosUnique }) => {
-    console.log("gola: ", ejerciciosUnique);
-
+    
     const handleSubmitUpdate = (e) => {
         e.preventDefault();
         actualizar(e);
@@ -9,7 +8,6 @@ export const UpdateExcercises = ({ cerrarModalUpdate, ejerciciosUnique, setEjerc
 
     const actualizar = async (e) => {
         e.preventDefault();
-        //console.log("actualizar:", habitUnique);
         //setHabitUnique(actualizarProgresoUniqueEnBd(habitUnique));
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/excerciseUpdate/updateExcercise/${ejerciciosUnique.id_ejercicio}`, {
             method: "PUT",

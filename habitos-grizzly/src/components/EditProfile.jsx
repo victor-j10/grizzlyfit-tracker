@@ -18,8 +18,7 @@ export const EditProfile = () => {
     const longitud = habitos.length;
     const [activeOption, setActiveOption] = useState('editProfile');
 
-    //console.log(habitosBDM.length);
-    //console.log("local: ", habitos);
+  
 
     const openModalPassword = () => {
         setModalOpenPassword(true);
@@ -86,9 +85,7 @@ export const EditProfile = () => {
             .then((data) => {
                 //validamos los datos obtenidos
                 setUsuarioSesion(data.usuario);
-                //console.log("obtener", data.usuario);
-                //setHabits(data);
-                //console.log(data);
+          
 
             })
             .catch((err) => {
@@ -114,15 +111,13 @@ export const EditProfile = () => {
         })
             .then((res) => res.json())
             .then((data2) => {
-                // console.log(conteo, ": ", data);
-                //console.log("en actualizar: ", data2);
+                
                 alert("Datos actualizados");
                 form.correo.value = "";
                 form.nombre.value = "";
                 setUsuarioSesion(data2.rows[0]);
             })
     }
-    //console.log(usuarioSesion);
 
     return (
 

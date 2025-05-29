@@ -7,7 +7,6 @@ export const UpdateHabits = ({ cerrarModalUpdate, habitUnique, setHabitUnique })
 
     const actualizar = async (e) => {
         e.preventDefault();
-        //console.log("actualizar:", habitUnique);
         //setHabitUnique(actualizarProgresoUniqueEnBd(habitUnique));
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/habitUpdate/updateHabit/${habitUnique.id_habito}`, {
             method: "PUT",

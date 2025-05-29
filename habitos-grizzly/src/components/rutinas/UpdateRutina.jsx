@@ -65,7 +65,7 @@ export const UpdateRutina = ({ rutinasTemp, setRutinasTemp, cerrarModalUpdate })
 
             const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/rutinas/updateRutina`, { nombreRutina, tipo_rutina, descripcion, ejercicios, id, id_rutina });
             const { message } = response.data;
-            console.log(response.data);
+            
             alert(message);
             cerrarModalUpdate();
 

@@ -32,8 +32,6 @@ export function AuthProvider({ children }) {
 
     //guarda los datos de la sesión, recibe el usuario y el token creado desde el login
     const login = (usuario, token) => {
-        console.log(usuario);
-        console.log(token);
         //setea las variables del useState
         setUsuario(usuario);
         setToken(token);

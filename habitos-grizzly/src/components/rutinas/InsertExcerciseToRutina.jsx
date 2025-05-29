@@ -8,7 +8,7 @@ export const InsertExcerciseToRutina = ({ cerrarModalOpenE, idRutina }) => {
     const id_rutina = idRutina;
     const [ejercicio, setEjercicio] = useState([]);
 
-    console.log(id_rutina);
+    
 
     useEffect(() => {
         if (!id) {
@@ -27,7 +27,7 @@ export const InsertExcerciseToRutina = ({ cerrarModalOpenE, idRutina }) => {
                 setEjercicio(data);
                 //actualizarProgresoEnBd(data);
                 //setHabits(data);
-                //console.log(data);
+                
 
             })
             .catch((err) => {

@@ -26,11 +26,9 @@ export const HabitList = () => {
     const abrirModalUpdate = () => setModalOpenUpdate(true);
     const cerrarModal = () => setModalOpen(false);
     const cerrarModalUpdate = () => setModalOpenUpdate(false);
-    //const limpiarFiltros = () => { setFiltroCategoria(true); categoriaFiltro.value = ""; console.log("valor al presionar: ", filtroCategoria);};
-    //console.log("valor inicial: ", filtroCategoria);
+
 
     const filtrarPorCategoria = async (categoria) => {
-        //console.log(categoria);
         //alert(e);
         //validamos que haya un valor, sino, retornamos y no hacemos nada.
         /* if (!categoria) {
@@ -53,10 +51,7 @@ export const HabitList = () => {
                     if (!categoria) {
                         categoriaFiltro.value = ""
                     }
-                    //console.log(data);
-                    //console.log(categoria);
-                    /*console.log(JSON.stringify({ categoria, id }));*/
-                    //si no, le decimos que no existen datos con esa categoría
+
                 } else {
                     alert("No existen datos con la categoría seleccionada");
                 }
@@ -68,14 +63,12 @@ export const HabitList = () => {
     }
 
     const actualizarProgresoEnBd = async (data) => {
-        //console.log(data.length);
-        //console.log("data: ", data);
+
         for (let habit of data) {
             const idHabito = habit.id_habito;
             const fecha_inicioL = habit.fecha_inicio.split('T')[0];
             const fecha_finL = habit.fecha_fin.split('T')[0];
             const newProgreso = calcularProgreso(fecha_inicioL, fecha_finL);
-            //console.log(newProgreso);
 
             await fetch(`${import.meta.env.VITE_API_URL}/api/updateProgreso/progresoUpdate`, {
                 method: "PUT",
@@ -85,10 +78,8 @@ export const HabitList = () => {
             })
                 .then((res) => res.json())
                 .then((data2) => {
-                    // console.log(conteo, ": ", data);
                     setHabits(data2.rows);
                     habitosBD(data2.rows);
-                    //console.log("en actualizar: ", data2.rows);
                 })
             //conteo = conteo + 1;
 
@@ -114,7 +105,7 @@ export const HabitList = () => {
                 setHabits(data);
                 actualizarProgresoEnBd(data);
                 //setHabits(data);
-                //console.log(data);
+        
 
             })
             .catch((err) => {
@@ -151,7 +142,6 @@ export const HabitList = () => {
     /*
         const buscarPorNombre = (e) => {
             //alert(e);
-            //console.log("valor al buscar: ", filtroCategoria);
             const resultados = habits.filter(habito =>
                 habito.nombre.toLowerCase().includes(e.toLowerCase())
             );
@@ -160,7 +150,6 @@ export const HabitList = () => {
         };*/
 
     /*const filtrarCategoria = (e) => {
-        //console.log(e);
         const resultados = habits.filter(habito =>
             habito.categoria.toLowerCase().includes(e.categoria.toLowerCase())
         );

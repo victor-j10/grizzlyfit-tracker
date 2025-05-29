@@ -38,7 +38,6 @@ export const DashBoard = () => {
                 const responseRutinas = await axios.post(`${import.meta.env.VITE_API_URL}/api/rutinas/`, { id_usuario });
                 const { rutinasUser } = responseRutinas.data;
                 setRutinas(rutinasUser);
-                console.log(rutinasUser);
 
             } catch (error) {
                 if (error.response) {

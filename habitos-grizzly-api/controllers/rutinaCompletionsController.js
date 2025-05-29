@@ -10,7 +10,8 @@ exports.getCompletionsCount = async (id_usuario) => {
 
 exports.saveCompletionsCount = async (req, res) => {
     const { id_rutina, id_usuario } = req.body;
-    const ahora = new Date();
+    const ahora = new Date().toISOString().split("T")[0];
+    
     const completado = 1;
     try {
         const [validateRutina] = await db.promise().query('SELECT completado FROM rutina_completions WHERE id_rutina = ? AND id_usuario = ? AND completado = 1',
@@ -64,7 +65,7 @@ exports.resetCompletions = async (req, res) => {
 }
 
 exports.saveRutinaCompletions = async (id_rutina, id_usuario) => {
-    const actual = new Date();
+    const actual = new Date().toISOString().split("T")[0];
     try {
         const [result3] = await db.promise().query(
             'INSERT INTO rutina_completions (id_rutina, id_usuario, fecha, completado, count, racha_actual, racha_max) VALUES (?,?,?,?,?,?,?)',

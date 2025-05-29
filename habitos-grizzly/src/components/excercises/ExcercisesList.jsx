@@ -62,7 +62,7 @@ export const ExcercisesList = () => {
                 setEjercicios(data);
                 //actualizarProgresoEnBd(data);
                 //setHabits(data);
-                
+
 
             })
             .catch((err) => {
@@ -113,7 +113,7 @@ export const ExcercisesList = () => {
     };
 
     const filtrarPorCategoria = (categoria) => {
-        
+
         //1. Validar categoria --> si el ejercicios busqueda es menor que cero quiere decir que el filtro de la busqueda no ha sido usado
 
         fetch(`${import.meta.env.VITE_API_URL}/api/ejerciciosByCategoria/listaEjerciciosPorCategoria`, {
@@ -160,71 +160,72 @@ export const ExcercisesList = () => {
             <Home activeOption={activeOption} setActiveOption={setActiveOption} />
             {/*HEADER*/}
 
-            <main className="flex-1 p-6 overflow-y-auto">
-                <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-2xl font-bold mb-6">Resumen de Ejercicios</h1>
+            <div className="w-4/5 max-w-6xl mx-auto p-6 overflow-y-auto">
+                <main className="flex-1 p-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <h1 className="text-2xl font-bold mb-6">Resumen de Ejercicios</h1>
 
-                    <button
-                        onClick={abrirModal}
-                        className="border border-gray-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lime-500 hover:bg-lime-500 hover:text-white hover:outline-lime-600 cursor-pointer">
-                        Nuevo Ejercicio
-                    </button>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    {/* Cumplidos */}
-                    <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-300">
-                        <div className="flex items-center space-x-4">
-                            <div className="bg-gray-100 text-gray-600 p-3 rounded-full">
-                                <span className="material-icons">numbers</span>
-                            </div>
-                            <div>
-                                <p className="text-sm text-gray-500">Total de ejercicios</p>
-                                <p className="text-xl font-bold">
-                                    {ejercicios.length}
-                                </p>
-                            </div>
-                        </div>
+                        <button
+                            onClick={abrirModal}
+                            className="border border-gray-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lime-500 hover:bg-lime-500 hover:text-white hover:outline-lime-600 cursor-pointer">
+                            Nuevo Ejercicio
+                        </button>
                     </div>
 
-                    
-                </div>
-
-
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold">Mis Ejercicios</h2>
-
-                    <select
-                        className="border border-gray-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lime-500"
-                        value={filtro}
-                        onChange={(e) => setFiltro(e.target.value)}
-                    >
-                        <option value="todos">Todos</option>
-                        <option value="pecho">Pecho</option>
-                        <option value="abdomen">Abdomen</option>
-                        <option value="pierna">Piernas</option>
-                        <option value="cardio">Cardio</option>
-                    </select>
-                </div>
-                <div className="space-y-6">
-                    {ejercicios.filter(filtrarEjercicios).map((ejercicio) => (
-                        <div
-                            key={ejercicio.id_ejercicio}
-                            className="bg-white rounded-2xl p-6 shadow-md border border-gray-300 flex flex-col md:flex-row md:justify-between md:items-center gap-4 transition hover:shadow-lg"
-                        >
-                            {/* INFO IZQUIERDA */}
-                            <div className="space-y-1">
-                                <h3 className="text-xl font-semibold text-gray-800">{ejercicio.nombre}</h3>
-                                <p className="text-sm text-gray-500">📆 Frecuencia: Diario</p>
-                                <p className="text-sm text-gray-500">📕 Descripcion: {ejercicio.descripcion}</p>
-                                <p className="text-sm text-gray-500">🏷 Categoría: {ejercicio.categoria}</p>
-                                <p className="text-sm text-gray-500">🏋️‍♀️ Sets: {ejercicio.sets}</p>
-                                <p className="text-sm text-gray-500">⌚ Reps: {ejercicio.reps}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        {/* Cumplidos */}
+                        <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-300">
+                            <div className="flex items-center space-x-4">
+                                <div className="bg-gray-100 text-gray-600 p-3 rounded-full">
+                                    <span className="material-icons">numbers</span>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-500">Total de ejercicios</p>
+                                    <p className="text-xl font-bold">
+                                        {ejercicios.length}
+                                    </p>
+                                </div>
                             </div>
+                        </div>
 
-                            {/* INFO DERECHA */}
-                            <div className="flex flex-col md:flex-row items-start md:items-center justify-end gap-4 w-full md:w-1/2">
-                                {/* 
+
+                    </div>
+
+
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-xl font-semibold">Mis Ejercicios</h2>
+
+                        <select
+                            className="border border-gray-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lime-500"
+                            value={filtro}
+                            onChange={(e) => setFiltro(e.target.value)}
+                        >
+                            <option value="todos">Todos</option>
+                            <option value="pecho">Pecho</option>
+                            <option value="abdomen">Abdomen</option>
+                            <option value="pierna">Piernas</option>
+                            <option value="cardio">Cardio</option>
+                        </select>
+                    </div>
+                    <div className="space-y-6">
+                        {ejercicios.filter(filtrarEjercicios).map((ejercicio) => (
+                            <div
+                                key={ejercicio.id_ejercicio}
+                                className="bg-white rounded-2xl p-6 shadow-md border border-gray-300 flex flex-col md:flex-row md:justify-between md:items-center gap-4 transition hover:shadow-lg"
+                            >
+                                {/* INFO IZQUIERDA */}
+                                <div className="space-y-1">
+                                    <h3 className="text-xl font-semibold text-gray-800">{ejercicio.nombre}</h3>
+                                    <p className="text-sm text-gray-500">📆 Frecuencia: Diario</p>
+                                    <p className="text-sm text-gray-500">📕 Descripcion: {ejercicio.descripcion}</p>
+                                    <p className="text-sm text-gray-500">🏷 Categoría: {ejercicio.categoria}</p>
+                                    <p className="text-sm text-gray-500">🏋️‍♀️ Sets: {ejercicio.sets}</p>
+                                    <p className="text-sm text-gray-500">⌚ Reps: {ejercicio.reps}</p>
+                                </div>
+
+                                {/* INFO DERECHA */}
+                                <div className="flex flex-col md:flex-row items-start md:items-center justify-end gap-4 w-full md:w-1/2">
+                                    {/* 
                                 <span
                                     className={`px-3 py-1 rounded-full text-sm font-medium 
                                         ${habit.cumplido === 1
@@ -244,29 +245,30 @@ export const ExcercisesList = () => {
                                                 : "⏳ Pendiente"}
                                 </span>
 Estado */}
-                                {/* Botones */}
-                                <div className="flex gap-2">
-                                    <button
-                                        onClick={() => obtenerEjercicio(ejercicio)}
-                                        className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-500 hover:text-white transition cursor-pointer"
-                                    >
-                                        Actualizar
-                                    </button>
-                                    <button
-                                        onClick={eliminar}
-                                        className="px-4 py-2 text-sm font-medium text-red-600 border border-red-300 rounded-lg hover:bg-red-500 hover:text-white transition cursor-pointer"
-                                    >
-                                        Eliminar
-                                    </button>
+                                    {/* Botones */}
+                                    <div className="flex flex-col justify-center gap-1 items-center sm:flex-row">
+                                        <button
+                                            onClick={() => obtenerEjercicio(ejercicio)}
+                                            className="px-4 py-2 w-full text-sm font-medium text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-500 hover:text-white transition cursor-pointer"
+                                        >
+                                            Actualizar
+                                        </button>
+                                        <button
+                                            onClick={eliminar}
+                                            className="px-4 py-2 w-full text-sm font-medium text-red-600 border border-red-300 rounded-lg hover:bg-red-500 hover:text-white transition cursor-pointer"
+                                        >
+                                            Eliminar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
-            </main >
-            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+                </main >
 
+                <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+            </div>
             {modalOpen && (
                 <CreateExcercises cerrarModal={cerrarModal} />
             )}

@@ -137,7 +137,7 @@ export const EditProfile = () => {
                                 <input
                                     name="nombre"
                                     type="text"
-                                    value={usuarioSesion.nombre}
+                                    value={usuarioSesion?.nombre || ""}
                                     onChange={(e) => setUsuarioSesion({
                                         ...usuarioSesion, nombre: e.target.value
                                     })}
@@ -150,7 +150,7 @@ export const EditProfile = () => {
                                 <input
                                     name="correo"
                                     type="email"
-                                    value={usuarioSesion.correo}
+                                    value={usuarioSesion?.correo || ""}
                                     onChange={(e) => setUsuarioSesion({
                                         ...usuarioSesion, correo: e.target.value
                                     })}

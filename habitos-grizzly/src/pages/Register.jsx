@@ -19,7 +19,7 @@ export const Register = () => {
         const password = form.password.value;
 
         try {
-            const response = await axios.post('http://localhost:3001/api/user/registerUser', { nombre, correo, password })
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/registerUser`, { nombre, correo, password })
             const { message, usuario, token } = response.data;
             alert(message);
             login(usuario, token);

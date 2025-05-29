@@ -52,7 +52,7 @@ export const RutinaList = () => {
         //alert(id_rutina)
         if (confirm("¿Desea eliminar esta rutina?")) {
             try {
-                const response = await axios.delete(`http://localhost:3001/api/rutinas/deleteRutina/${id_rutina}/${id_usuario}`);
+                const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/rutinas/deleteRutina/${id_rutina}/${id_usuario}`);
                 const { message } = response.data;
                 alert(message);
                 setDeleteRutina(false);
@@ -74,7 +74,7 @@ export const RutinaList = () => {
     const marcarComoCompletada = async (id_rutina) => {
         setCountRutina(true);
         try {
-            const response = await axios.put('http://localhost:3001/api/rutinaCompletions/insertCompletions',
+            const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/rutinaCompletions/insertCompletions`,
                 { id_rutina, id_usuario }
             );
             const { message } = response.data;
@@ -101,14 +101,14 @@ export const RutinaList = () => {
 
         const fetchRutinas = async () => {
             try {
-                const reset = await axios.post('http://localhost:3001/api/rutinaCompletions/resetRutinas', { id_usuario });
+                const reset = await axios.post(`${import.meta.env.VITE_API_URL}/api/rutinaCompletions/resetRutinas`, { id_usuario });
                 const { message } = reset.data;
                 console.log(message);
 
-                const daysOfRacha = await axios.post('http://localhost:3001/api/rutinaCompletions/daysOfRachaDaily', { id_usuario });
+                const daysOfRacha = await axios.post(`${import.meta.env.VITE_API_URL}/api/rutinaCompletions/daysOfRachaDaily`, { id_usuario });
                 console.log(daysOfRacha.data);
 
-                const response = await axios.post('http://localhost:3001/api/rutinas/', { id_usuario });
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/rutinas/`, { id_usuario });
                 const { rutinasUser, vecesCompletada } = response.data;
                 const row1 = vecesCompletada[0];
                 console.log(row1);

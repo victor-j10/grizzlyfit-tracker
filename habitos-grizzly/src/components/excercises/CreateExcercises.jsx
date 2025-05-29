@@ -22,7 +22,7 @@ export const CreateExcercises = ({ cerrarModal }) => {
         const id_usuario = usuario.id_usuario;
 
         try {
-            const res = await fetch("http://localhost:3001/api/excerciseInsert/insertExcercise", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/excerciseInsert/insertExcercise`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ nombre, descripcion, categoria, sets, reps, id_usuario })

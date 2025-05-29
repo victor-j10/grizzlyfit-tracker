@@ -15,7 +15,7 @@ export const InsertExcerciseToRutina = ({ cerrarModalOpenE, idRutina }) => {
             return;
         }
 
-        fetch("http://localhost:3001/api/ejerciciosById/listaEjercicios", {
+        fetch(`${import.meta.env.VITE_API_URL}/api/ejerciciosById/listaEjercicios`, {
             method: "POST",
             //el tipo de contenido
             headers: { "Content-Type": "application/json" },
@@ -51,7 +51,7 @@ export const InsertExcerciseToRutina = ({ cerrarModalOpenE, idRutina }) => {
         const duracion_segundos = form.duracion_segundos.value;
 
         try {
-            const res = await fetch("http://localhost:3001/api/rutinas/insertEjercicios", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/rutinas/insertEjercicios`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ rutina_id, ejercicio_id, orden, duracion_segundos })

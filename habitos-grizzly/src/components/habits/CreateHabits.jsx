@@ -23,7 +23,7 @@ export const CreateHabits = ({ cerrarModal }) => {
         const id_usuario = usuario.id_usuario;
 
         try {
-            const res = await fetch("http://localhost:3001/api/habitInsert/insertHabito", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/habitInsert/insertHabito`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ nombre, descripcion, fecha_inicio, fecha_fin, progreso, cumplido, categoria, id_usuario })

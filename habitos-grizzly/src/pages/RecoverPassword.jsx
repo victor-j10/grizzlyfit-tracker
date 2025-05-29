@@ -25,7 +25,7 @@ export const RecoverPassword = () => {
         }
 
         try {
-            const res = await axios.post("http://localhost:3001/api/user/resetPassword", {
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/resetPassword`, {
                 token,              // <- Enviamos el token capturado
                 password: newPassword
             });

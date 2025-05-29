@@ -28,14 +28,14 @@ export const DashBoard = () => {
         if (!id) return;
         const fetchHabitsExcercises = async () => {
             try {
-                const responseHabits = await axios.post('http://localhost:3001/api/habitsById/listaHabitos', { id });
+                const responseHabits = await axios.post(`${import.meta.env.VITE_API_URL}/api/habitsById/listaHabitos`, { id });
                 setHabits(responseHabits.data);
 
-                const responseExcercises = await axios.post('http://localhost:3001/api/ejercicios/listaEjercicios', { id });
+                const responseExcercises = await axios.post(`${import.meta.env.VITE_API_URL}/api/ejercicios/listaEjercicios`, { id });
                 setExcercises(responseExcercises.data);
 
                 const id_usuario = id;
-                const responseRutinas = await axios.post('http://localhost:3001/api/rutinas/', { id_usuario });
+                const responseRutinas = await axios.post(`${import.meta.env.VITE_API_URL}/api/rutinas/`, { id_usuario });
                 const { rutinasUser } = responseRutinas.data;
                 setRutinas(rutinasUser);
                 console.log(rutinasUser);

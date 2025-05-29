@@ -31,7 +31,7 @@ export const CreateRutina = ({ cerrarModal }) => {
         const id_usuario = usuario.id_usuario;
 
         try {
-            const res = await fetch("http://localhost:3001/api/rutinas/rutinas", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/rutinas/rutinas`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ nombre, tipo_rutina, dia, descripcion, id_usuario })

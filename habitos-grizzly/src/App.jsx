@@ -74,6 +74,7 @@ function App() {
           <Route path="/register" element={<PublicRoute>
             <Register />
           </PublicRoute>} />
+          <Route path="*" element={<h1>Página no encontrada</h1>} />
         </Routes>
       </AuthProvider>
     </Router>

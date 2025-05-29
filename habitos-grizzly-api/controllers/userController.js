@@ -108,15 +108,15 @@ exports.saveUser = async (req, res) => {
       id: saveUsuario.insertId, correo: correo, nombre: nombre
     }, process.env.JWT_SECRET || 'secreto123', { expiresIn: '2h' });
 
-    const link = "http://localhost:5173/login";
+    //const link = "http://localhost:5173/login";
 
-    const mensaje = generarPlantillaWelcome(nombre, link);
+    //const mensaje = generarPlantillaWelcome(nombre, link);
 
-    await mailer.enviarNotificacion({
+    /*await mailer.enviarNotificacion({
       correo: correo, // asumimos que cada hábito tiene el correo
       asunto: `Bienvenido a GrizzlyFit Tracker`,
       mensaje
-    });
+    });*/
 
     //se envía un mensaje, los datos del usuario y el token.
     res.status(200).json({

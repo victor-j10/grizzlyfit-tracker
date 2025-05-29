@@ -54,7 +54,7 @@ export function Login() {
             //accedemos a estos por medio de su estructura
             //console.log("Bienvenido: ", data.usuario.nombre);
             login(data.usuario, data.token);
-            navigate("/habitList");
+            navigate("/dashboard");
 
         } catch (err) {
             console.error('Error al traer el usuario: ', err);

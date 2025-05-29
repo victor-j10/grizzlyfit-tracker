@@ -12,6 +12,7 @@ import { RutinaList } from "./components/rutinas/RutinasList";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { RecoverPassword } from "./pages/RecoverPassword";
 import { Register } from "./pages/Register";
+import { DashBoard } from "./components/DashBoard";
 
 
 //función app, que hace referencia a la vista que se muestra en el servidor.
@@ -36,6 +37,12 @@ function App() {
             <PublicRoute>
               <RecoverPassword />
             </PublicRoute>
+          } />
+          <Route path="/dashboard" element={
+            <PrivateRoute>
+              {/*<Home />*/}
+              <DashBoard />
+            </PrivateRoute>
           } />
           <Route path="/habitList" element={
             <PrivateRoute>

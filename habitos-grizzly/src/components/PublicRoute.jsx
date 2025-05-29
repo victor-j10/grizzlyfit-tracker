@@ -12,5 +12,5 @@ export function PublicRoute({ children }) {
   }
 
   //sino, y existe un token, lo mandamos al home, en dado caso, lo seguimos dejando en el children.
-  return token ? <Navigate to="/habitList" /> : children;
+  return token ? <Navigate to="/dashboard" /> : children;
 }

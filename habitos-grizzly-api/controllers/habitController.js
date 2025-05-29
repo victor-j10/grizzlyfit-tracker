@@ -112,8 +112,6 @@ exports.updateHabit = async (req, res) => {
     const fecha_fin_formateada = new Date(habito.fecha_fin).toISOString().split("T")[0];
 
 
-    console.log(fecha_i, fecha_f);
-
     const [result] = await db.promise().query(
       'UPDATE habitos SET nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, progreso = ?, cumplido = ?, categoria = ?, id_usuario = ? WHERE id_habito = ?',
       [habito.nombre, habito.descripcion, fecha_inicio_formateada, fecha_fin_formateada, habito.progreso, habito.cumplido, habito.categoria, habito.id_usuario, habito.id_habito]

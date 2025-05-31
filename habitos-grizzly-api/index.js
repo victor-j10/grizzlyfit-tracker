@@ -42,9 +42,10 @@ app.listen(PORT, () => {
 });
 
 //con cron podemos programar el envío. en este caso lo programo todos los días a las 2:30 pm
-cron.schedule('30 14 * * *', async () => {
+/*cron.schedule('30 14 * * *', async () => {
   //se manda un console.log para avisar que se está ejecutando la notificación
   console.log("⏰ Ejecutando notificación diaria de hábitos por vencer...");
   //se llama al método enviarNotificacionesPendientes
   await habitController.enviarNotificacionesPendientes(); // asumimos que ahí se manda la notificación
 });
+*/

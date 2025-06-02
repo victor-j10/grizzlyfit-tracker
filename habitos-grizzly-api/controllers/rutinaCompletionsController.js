@@ -11,7 +11,7 @@ exports.getCompletionsCount = async (id_usuario) => {
 exports.saveCompletionsCount = async (req, res) => {
     const { id_rutina, id_usuario } = req.body;
     const ahora = new Date().toISOString().split("T")[0];
-    
+
     const completado = 1;
     try {
         const [validateRutina] = await db.promise().query('SELECT completado FROM rutina_completions WHERE id_rutina = ? AND id_usuario = ? AND completado = 1',
@@ -78,7 +78,8 @@ exports.saveRutinaCompletions = async (id_rutina, id_usuario) => {
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({ error: 'Error al resetear la rutina' });
+        const message = "Error al resetear la rutina";
+        return message;
     }
 }
 

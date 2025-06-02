@@ -15,7 +15,7 @@ export const InsertExcerciseToRutina = ({ cerrarModalOpenE, idRutina }) => {
             return;
         }
 
-        fetch(`${import.meta.env.VITE_API_URL}/api/ejerciciosById/listaEjercicios`, {
+        fetch(`${import.meta.env.VITE_API_URL}/api/ejercicios/listaEjercicios`, {
             method: "POST",
             //el tipo de contenido
             headers: { "Content-Type": "application/json" },

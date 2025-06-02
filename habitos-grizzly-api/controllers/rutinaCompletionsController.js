@@ -68,8 +68,8 @@ exports.saveRutinaCompletions = async (id_rutina, id_usuario) => {
     const actual = new Date().toISOString().split("T")[0];
     try {
         const [result3] = await db.promise().query(
-            'INSERT INTO rutina_completions (id_rutina, id_usuario, fecha, fecha_modified, completado, count, racha_actual, racha_max) VALUES (?,?,?,?,?,?,?,?)',
-            [id_rutina, id_usuario, actual, actual, 0, 0, 0, 0]
+            'INSERT INTO rutina_completions (id_rutina, id_usuario, fecha, fecha_modified, completado, count, racha_actual, racha_max, racha_completed) VALUES (?,?,?,?,?,?,?,?,?)',
+            [id_rutina, id_usuario, actual, actual, 0, 0, 0, 0, 0]
         );
 
         const message2 = "insertado";

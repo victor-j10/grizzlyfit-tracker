@@ -12,8 +12,8 @@ exports.saveRutina = async (req, res) => {
 
         //validamos que la rutina no haya sido creada ya
         const [response] = await db.promise().query(
-            'SELECT * FROM rutinas WHERE dia = ?',
-            [dia]
+            'SELECT r.id_rutina, u.id_usuario, r.dia FROM rutinas as r JOIN usuarios_rutinas as uR on uR.rutina_id = r.id_rutina JOIN usuarios as u on u.id_usuario = uR.usuario_id WHERE r.dia = ? AND u.id_usuario = ?',
+            [dia, id_usuario]
         );
         if (response.length > 0) {
             return res.status(401).json({ message: "Ya existe una rutina para este día" })

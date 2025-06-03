@@ -2,14 +2,13 @@ import { useEffect, useState } from "react"
 import { useAuth } from "../../contexts/AuthContext";
 import { CreateExcercises } from "./CreateExcercises";
 import { UpdateExcercises } from "./UpdateExcercises";
-import { useNavigate } from "react-router-dom";
 import { Home } from "../Home";
+import axios from "axios";
 
 export const ExcercisesList = () => {
 
     const [ejercicios, setEjercicios] = useState([]);
     const [ejerciciosUnique, setEjerciciosUnique] = useState([]);
-    const [ejerciciosBusqueda, setEjerciciosBusqueda] = useState([]);
     const [filtro, setFiltro] = useState("Todos");
     const { usuario } = useAuth();
     const id = usuario.id_usuario;
@@ -17,8 +16,6 @@ export const ExcercisesList = () => {
     const [modalOpenUpdate, setModalOpenUpdate] = useState(false);
     const [ejercicioDelete, setEjercicioDelete] = useState(false);
     const [activeOption, setActiveOption] = useState('ejercicioList');
-    const defaultValor = "";
-    const navigate = useNavigate();
 
     const abrirModal = () => {
         setModalOpen(true)
@@ -36,10 +33,6 @@ export const ExcercisesList = () => {
         setModalOpenUpdate(false);
     }
 
-    const cambiarEstado = () => {
-        setEjercicioDelete(false);
-    }
-
     const obtenerEjercicio = (ejercicio) => {
         abrirModalUpdate();
         setEjerciciosUnique(ejercicio);
@@ -50,57 +43,60 @@ export const ExcercisesList = () => {
             return;
         }
 
-        fetch(`${import.meta.env.VITE_API_URL}/api/ejercicios/listaEjercicios`, {
-            method: "POST",
-            //el tipo de contenido
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id })
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                //validamos los datos obtenidos
-                setEjercicios(data);
-                //actualizarProgresoEnBd(data);
-                //setHabits(data);
+        const fetchEjercicios = async () => {
+            try {
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/ejercicios/listaEjercicios`, { id });
+                setEjercicios(response.data);
+            } catch (error) {
+                if (error.response) {
+                    // Error desde el servidor con status 4xx o 5xx
+                    if (error.response.data.message) {
+                        return alert(error.response.data.message);
+                    }
+                    alert(error.response.data.error);
+                } else if (error.request) {
+                    // La petición se hizo pero no hubo respuesta
+                    console.error('No hubo respuesta del servidor');
+                } else {
+                    // Fallo al construir la petición
+                    console.error('Error desconocido:', error.error);
+                }
+            }
+        }
 
-
-            })
-            .catch((err) => {
-                console.error("Error al traer habitos: ", err);
-                /*setCargandoHabitos(false)*/
-            });
+        fetchEjercicios();
 
     }, [id, modalOpen, modalOpenUpdate, ejercicioDelete]);
 
     const eliminar = async (id_ejercicio) => {
         setEjercicioDelete(true);
         if (confirm("¿Desea eliminar este ejercicio?")) {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/excerciseDelete/deleteExcercise/${id_ejercicio}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ id_ejercicio: id_ejercicio }),
-            });
+            try {
+                const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/ejercicios/deleteExcercise/${id_ejercicio}`, {
+                    data: { id_ejercicio }
+                });
+                const { message } = response.data;
+                alert(message);
+                setEjercicioDelete(false);
 
-            const data = await res.json();
-            alert("Ejercicio eliminado");
-            setEjercicioDelete(false);
+            } catch (error) {
+                if (error.response) {
+                    // Error desde el servidor con status 4xx o 5xx
+                    if (error.response.data.message) {
+                        return alert(error.response.data.message);
+                    }
+                    alert(error.response.data.error);
+                } else if (error.request) {
+                    // La petición se hizo pero no hubo respuesta
+                    console.error('No hubo respuesta del servidor');
+                } else {
+                    // Fallo al construir la petición
+                    console.error('Error desconocido:', error);
+                }
+            }
+            
+
         }
-    }
-
-    const buscarPorNombre = (e) => {
-        //alert(e);
-        const resultados = ejercicios.filter(ejercicio =>
-            ejercicio.nombre.toLowerCase().includes(e.toLowerCase())
-        );
-        setEjerciciosBusqueda(resultados);
-        buscar.value = "";
-    };
-
-    const navegar = () => {
-
-        navigate("/gestionRutina");
     }
 
     const filtrarEjercicios = (ejercicio) => {
@@ -111,47 +107,6 @@ export const ExcercisesList = () => {
         if (filtro === 'piernas') return ejercicio.categoria === "Piernas" || ""
         return true;
     };
-
-    const filtrarPorCategoria = (categoria) => {
-
-        //1. Validar categoria --> si el ejercicios busqueda es menor que cero quiere decir que el filtro de la busqueda no ha sido usado
-
-        fetch(`${import.meta.env.VITE_API_URL}/api/ejerciciosByCategoria/listaEjerciciosPorCategoria`, {
-            method: "POST",
-            //el tipo de contenido
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ categoria, id })
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                //validamos que el array esté lleno
-                if (data.length > 0) {
-                    if (!categoria) {
-                        categoriaFiltro.value = ""
-                        setEjercicios(data);
-                        setEjerciciosBusqueda([]);
-                    } else if (ejerciciosBusqueda.length > 0) {
-                        //validar aquí también valores dentro del array temporal
-                        //se soluciona con un map
-                        const resultados = ejerciciosBusqueda.filter(ejercicio =>
-                            ejercicio.categoria.toLowerCase().includes(categoria.toLowerCase())
-                        );
-                        setEjerciciosBusqueda(resultados);
-                    } else {
-                        setEjercicios(data);
-                    }
-                    //
-
-                    //si no, le decimos que no existen datos con esa categoría
-                } else {
-                    alert("No existen datos con la categoría seleccionada");
-                }
-            })
-            .catch((err) => {
-                console.error("Error al traer habitos: ", err);
-                /*setCargandoHabitos(false)*/
-            });
-    }
 
 
     return (
@@ -225,26 +180,6 @@ export const ExcercisesList = () => {
 
                                 {/* INFO DERECHA */}
                                 <div className="flex flex-col md:flex-row items-start md:items-center justify-end gap-4 w-full md:w-1/2">
-                                    {/* 
-                                <span
-                                    className={`px-3 py-1 rounded-full text-sm font-medium 
-                                        ${habit.cumplido === 1
-                                            ? "bg-green-100 text-green-700"
-                                            : habit.fecha_fin.split('T')[0] === fechaActual
-                                                ? "bg-red-100 text-red-600"
-                                                : habit.fecha_fin.split('T')[0] < fechaActual
-                                                    ? "bg-gray-100 text-gray-600"
-                                                    : "bg-yellow-100 text-yellow-700"}`}
-                                >
-                                    {habit.cumplido === 1
-                                        ? "✅ Cumplido"
-                                        : habit.fecha_fin.split('T')[0] === fechaActual
-                                            ? "⚠️ Por Vencer"
-                                            : habit.fecha_fin.split('T')[0] < fechaActual
-                                                ? "Vencida"
-                                                : "⏳ Pendiente"}
-                                </span>
-Estado */}
                                     {/* Botones */}
                                     <div className="flex flex-col justify-center gap-1 items-center sm:flex-row">
                                         <button
@@ -254,7 +189,7 @@ Estado */}
                                             Actualizar
                                         </button>
                                         <button
-                                            onClick={eliminar}
+                                            onClick={() => eliminar(ejercicio.id_ejercicio)}
                                             className="px-4 py-2 w-full text-sm font-medium text-red-600 border border-red-300 rounded-lg hover:bg-red-500 hover:text-white transition cursor-pointer"
                                         >
                                             Eliminar

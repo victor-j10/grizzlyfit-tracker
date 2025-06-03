@@ -18,7 +18,7 @@ export const EditProfile = () => {
     const longitud = habitos.length;
     const [activeOption, setActiveOption] = useState('editProfile');
 
-  
+
 
     const openModalPassword = () => {
         setModalOpenPassword(true);
@@ -43,6 +43,9 @@ export const EditProfile = () => {
         } catch (error) {
             if (error.response) {
                 // Error desde el servidor con status 4xx o 5xx
+                if (error.response.data.message) {
+                    return alert(error.response.data.message);
+                }
                 alert(error.response.data.error);
             } else if (error.request) {
                 // La petición se hizo pero no hubo respuesta
@@ -72,26 +75,29 @@ export const EditProfile = () => {
     useEffect(() => {
         if (!id) return;
 
-        /*if (efectoEjecutado.current) return; // evita segunda ejecución en modo dev
-        efectoEjecutado.current = true;*/
+        const fetchUser = async () => {
+            try {
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/usuarioPorId`, { id });
+                const { usuario } = response.data;
+                setUsuarioSesion(usuario);
+            } catch (error) {
+                if (error.response) {
+                    // Error desde el servidor con status 4xx o 5xx
+                    if (error.response.data.message) {
+                        return alert(error.response.data.message);
+                    }
+                    alert(error.response.data.error);
+                } else if (error.request) {
+                    // La petición se hizo pero no hubo respuesta
+                    console.error('No hubo respuesta del servidor');
+                } else {
+                    // Fallo al construir la petición
+                    console.error('Error desconocido:', error.error);
+                }
+            }
+        }
 
-        fetch(`${import.meta.env.VITE_API_URL}/api/userById/usuarioPorId`, {
-            method: "POST",
-            //el tipo de contenido
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id })
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                //validamos los datos obtenidos
-                setUsuarioSesion(data.usuario);
-          
-
-            })
-            .catch((err) => {
-                console.error("Error al traer usuario: ", err);
-                /*setCargandoHabitos(false)*/
-            });
+        fetchUser();
     }, [id]); //Se vuelve a ejecutar tras agregar o actualizar
 
     const habitosPorCumplir = habitosSimplificados.length;
@@ -103,27 +109,31 @@ export const EditProfile = () => {
         const correo = form.correo.value;
         const id_usuario = usuario.id_usuario;
 
-        await fetch(`${import.meta.env.VITE_API_URL}/api/updateUsuario/usuarioUpdate`, {
-            method: "PUT",
-            //el tipo de contenido
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ nombre, correo, id_usuario })
-        })
-            .then((res) => res.json())
-            .then((data2) => {
-                
-                alert("Datos actualizados");
-                form.correo.value = "";
-                form.nombre.value = "";
-                setUsuarioSesion(data2.rows[0]);
-            })
+        try {
+            const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/user/usuarioUpdate`, { nombre, correo, id_usuario })
+            const { message, rows } = response.data;
+            alert(message);
+            setUsuarioSesion(rows[0]);
+
+        } catch (error) {
+            if (error.response) {
+                // Error desde el servidor con status 4xx o 5xx
+                if (error.response.data.message) {
+                    return alert(error.response.data.message);
+                }
+                alert(error.response.data.error);
+            } else if (error.request) {
+                // La petición se hizo pero no hubo respuesta
+                console.error('No hubo respuesta del servidor');
+            } else {
+                // Fallo al construir la petición
+                console.error('Error desconocido:', error.error);
+            }
+        }
     }
 
     return (
-
         <>
-
-
             <div className="flex h-screen">
                 <Home activeOption={activeOption} setActiveOption={setActiveOption} />
 

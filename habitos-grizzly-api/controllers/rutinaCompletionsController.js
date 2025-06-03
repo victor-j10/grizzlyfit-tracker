@@ -2,7 +2,7 @@ const db = require('../db/connection');
 const moment = require('moment');
 
 exports.getCompletionsCount = async (id_usuario) => {
-    const [rows] = await db.promise().query(
+    const [rows] = await db.query(
         'SELECT * FROM rutina_completions WHERE id_usuario = ? ORDER BY completado desc', [id_usuario]
     );
     return rows;
@@ -14,20 +14,20 @@ exports.saveCompletionsCount = async (req, res) => {
 
     const completado = 1;
     try {
-        const [validateRutina] = await db.promise().query('SELECT completado FROM rutina_completions WHERE id_rutina = ? AND id_usuario = ? AND completado = 1',
+        const [validateRutina] = await db.query('SELECT completado FROM rutina_completions WHERE id_rutina = ? AND id_usuario = ? AND completado = 1',
             [id_rutina, id_usuario]);
 
         if (validateRutina.length > 0) {
             return res.json({ message: 'Esta rutina ya fue completada hoy' });
         }
 
-        const [fetchRutina] = await db.promise().query('SELECT count FROM rutina_completions WHERE id_rutina = ? AND id_usuario = ?',
+        const [fetchRutina] = await db.query('SELECT count FROM rutina_completions WHERE id_rutina = ? AND id_usuario = ?',
             [id_rutina, id_usuario]);
 
         const count = fetchRutina[0].count;
         const newCount = count + 1;
 
-        const [saveCompletions] = await db.promise().query('UPDATE rutina_completions SET completado = ?, count = ?, fecha_modified = ? WHERE id_rutina = ? AND id_usuario = ?',
+        const [saveCompletions] = await db.query('UPDATE rutina_completions SET completado = ?, count = ?, fecha_modified = ? WHERE id_rutina = ? AND id_usuario = ?',
             [completado, newCount, ahora, id_rutina, id_usuario]);
 
         res.status(200).json({ message: 'Rutina completada!', saveCompletions });
@@ -43,7 +43,7 @@ exports.resetCompletions = async (req, res) => {
     const completado = 0;
     const fechaHoy = new Date().toISOString().split('T')[0];
     try {
-        const [fetchRutinas] = await db.promise().query('SELECT * FROM rutina_completions WHERE fecha_modified < ? AND id_usuario = ? AND completado = 1', [fechaHoy, id_usuario]);
+        const [fetchRutinas] = await db.query('SELECT * FROM rutina_completions WHERE fecha_modified < ? AND id_usuario = ? AND completado = 1', [fechaHoy, id_usuario]);
 
         if (fetchRutinas.length === 0) {
             return res.json({ message: 'Todas las rutinas están resets' })
@@ -52,7 +52,7 @@ exports.resetCompletions = async (req, res) => {
         for (let i = 0; i < fetchRutinas.length; i++) {
             const rutina = fetchRutinas[i];
 
-            const [resetRutina] = await db.promise().query('UPDATE rutina_completions SET completado = ? WHERE id_rutina = ? AND id_usuario = ?',
+            const [resetRutina] = await db.query('UPDATE rutina_completions SET completado = ? WHERE id_rutina = ? AND id_usuario = ?',
                 [completado, rutina.id_rutina, id_usuario]);
 
             updates.push(resetRutina.affectedRows);
@@ -67,7 +67,7 @@ exports.resetCompletions = async (req, res) => {
 exports.saveRutinaCompletions = async (id_rutina, id_usuario) => {
     const actual = new Date().toISOString().split("T")[0];
     try {
-        const [result3] = await db.promise().query(
+        const [result3] = await db.query(
             'INSERT INTO rutina_completions (id_rutina, id_usuario, fecha, fecha_modified, completado, count, racha_actual, racha_max, racha_completed) VALUES (?,?,?,?,?,?,?,?,?)',
             [id_rutina, id_usuario, actual, actual, 0, 0, 0, 0, 0]
         );
@@ -88,7 +88,7 @@ exports.daysOfRacha = async (req, res) => {
     const { id_usuario } = req.body;
 
     try {
-        const [fetchRutinas] = await db.promise().query('SELECT * FROM rutina_completions WHERE id_usuario = ?', [id_usuario]);
+        const [fetchRutinas] = await db.query('SELECT * FROM rutina_completions WHERE id_usuario = ?', [id_usuario]);
 
         //console.log(fetchRutinas);
         if (fetchRutinas.length === 0) {
@@ -105,7 +105,7 @@ exports.daysOfRacha = async (req, res) => {
 
         if (hayIncompletas) {
             if (algunaModificadaAntesDeHoy) {
-                const [resetRacha] = await db.promise().query('UPDATE rutina_completions SET completado = ?, racha_actual = ?, racha_completed = ? WHERE id_usuario = ?', [0, 0, 0, id_usuario])
+                const [resetRacha] = await db.query('UPDATE rutina_completions SET completado = ?, racha_actual = ?, racha_completed = ? WHERE id_usuario = ?', [0, 0, 0, id_usuario])
                 return res.json({ message: 'No completaste tu rutina :c', resetRacha });
             }
             return res.json({ message: 'Las rutinas aún no han sido completadas' });
@@ -115,10 +115,10 @@ exports.daysOfRacha = async (req, res) => {
             const racha_actual = fetchRutinas[0].racha_actual + 1;
             const racha_max = fetchRutinas[0].racha_max;
             if (racha_actual > racha_max) {
-                const [updateRacha] = await db.promise().query('UPDATE rutina_completions SET racha_actual = ?, racha_max = ?, racha_completed = ? WHERE id_usuario = ?', [racha_actual, racha_actual, 1, id_usuario])
+                const [updateRacha] = await db.query('UPDATE rutina_completions SET racha_actual = ?, racha_max = ?, racha_completed = ? WHERE id_usuario = ?', [racha_actual, racha_actual, 1, id_usuario])
                 return res.status(200).json({ message: 'Prueba fin', updateRacha });
             }
-            const [updateRacha] = await db.promise().query('UPDATE rutina_completions SET racha_actual = ?, racha_completed = ? WHERE id_usuario = ?', [racha_actual, 1, id_usuario])
+            const [updateRacha] = await db.query('UPDATE rutina_completions SET racha_actual = ?, racha_completed = ? WHERE id_usuario = ?', [racha_actual, 1, id_usuario])
             res.status(200).json({ message: 'Prueba fin', updateRacha });
         }
 
@@ -147,7 +147,7 @@ exports.daysOfRachaDaily = async (req, res) => {
             "sabado"
         ];
 
-        const [fetchRutinas] = await db.promise().query('SELECT rC.*, r.dia FROM rutina_completions as rC JOIN rutinas as r ON r.id_rutina = rC.id_rutina WHERE rC.id_usuario = ?', [id_usuario]);
+        const [fetchRutinas] = await db.query('SELECT rC.*, r.dia FROM rutina_completions as rC JOIN rutinas as r ON r.id_rutina = rC.id_rutina WHERE rC.id_usuario = ?', [id_usuario]);
 
         //console.log(fetchRutinas);
         if (fetchRutinas.length === 0) {
@@ -162,7 +162,7 @@ exports.daysOfRachaDaily = async (req, res) => {
         }
         const id_rutina = rutinaActual[0].id_rutina
 
-        const [fetchRutinasActual] = await db.promise().query('SELECT * FROM rutina_completions WHERE id_usuario = ? AND id_rutina = ?', [id_usuario, id_rutina]);
+        const [fetchRutinasActual] = await db.query('SELECT * FROM rutina_completions WHERE id_usuario = ? AND id_rutina = ?', [id_usuario, id_rutina]);
 
         const hoy = new Date().toISOString().split('T')[0];
 
@@ -178,7 +178,7 @@ exports.daysOfRachaDaily = async (req, res) => {
         if (hayIncompletas) {
             //si está en fechas pasadas se reinicia la racha
             if (algunaModificadaAntesDeHoy) {
-                const [dateRecent] = await db.promise().query('SELECT * FROM rutina_completions WHERE id_usuario = 1 ORDER BY fecha_modified desc limit 1');
+                const [dateRecent] = await db.query('SELECT * FROM rutina_completions WHERE id_usuario = 1 ORDER BY fecha_modified desc limit 1');
                 const rutina = dateRecent[0];
                 const diaMostReciente = rutina.fecha_modified
                 console.log(diaMostReciente);
@@ -186,10 +186,10 @@ exports.daysOfRachaDaily = async (req, res) => {
                 const diferenciaEnDias = moment(hoy).diff(moment(diaMostReciente), 'days');
                 console.log(diferenciaEnDias)
                 if (diferenciaEnDias >= 2) {
-                    const [resetRacha] = await db.promise().query('UPDATE rutina_completions SET completado = ?, racha_actual = ?, racha_completed = ? WHERE id_usuario = ?', [0, 0, 0, id_usuario])
+                    const [resetRacha] = await db.query('UPDATE rutina_completions SET completado = ?, racha_actual = ?, racha_completed = ? WHERE id_usuario = ?', [0, 0, 0, id_usuario])
                     return res.json({ message: 'Perdiste tu racha :c', resetRacha });
                 }
-                const [resetRacha] = await db.promise().query('UPDATE rutina_completions SET completado = ?, racha_completed = ? WHERE id_usuario = ?', [0, 0, 0, id_usuario])
+                const [resetRacha] = await db.query('UPDATE rutina_completions SET completado = ?, racha_completed = ? WHERE id_usuario = ?', [0, 0, 0, id_usuario])
                 return res.json({ message: 'aún no completas la rutina :c', resetRacha });
             }
             //sino pasa a decir que la rutina aún no se cumple
@@ -202,10 +202,10 @@ exports.daysOfRachaDaily = async (req, res) => {
             const racha_actual = fetchRutinasActual[0].racha_actual + 1;
             const racha_max = fetchRutinasActual[0].racha_max;
             if (racha_actual > racha_max) {
-                const [updateRacha] = await db.promise().query('UPDATE rutina_completions SET racha_actual = ?, racha_max = ?, racha_completed = ? WHERE id_usuario = ?', [racha_actual, racha_actual, 1, id_usuario])
+                const [updateRacha] = await db.query('UPDATE rutina_completions SET racha_actual = ?, racha_max = ?, racha_completed = ? WHERE id_usuario = ?', [racha_actual, racha_actual, 1, id_usuario])
                 return res.status(200).json({ message: 'Prueba fin', updateRacha });
             }
-            const [updateRacha] = await db.promise().query('UPDATE rutina_completions SET racha_actual = ?, racha_completed = ? WHERE id_usuario = ? AND id_rutina = ?', [racha_actual, 1, id_usuario, id_rutina])
+            const [updateRacha] = await db.query('UPDATE rutina_completions SET racha_actual = ?, racha_completed = ? WHERE id_usuario = ? AND id_rutina = ?', [racha_actual, 1, id_usuario, id_rutina])
             res.status(200).json({ message: 'Prueba fin', updateRacha });
         }
 

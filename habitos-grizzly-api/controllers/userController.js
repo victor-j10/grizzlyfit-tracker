@@ -5,7 +5,7 @@ const mailer = require('../utils/mailer');
 
 exports.getUser = async (req, res) => {
   try {
-    const [rows] = await db.promise().query('SELECT * FROM usuarios');
+    const [rows] = await db.query('SELECT * FROM usuarios');
     res.json(rows);
   } catch (err) {
     console.error(err);
@@ -25,7 +25,7 @@ exports.getUsuarioPorCorreo = async (req, res) => {
     }
 
     //se realiza la consulta en la bd.
-    const [rows] = await db.promise().query('SELECT * FROM usuarios WHERE correo = ?', [correo]);
+    const [rows] = await db.query('SELECT * FROM usuarios WHERE correo = ?', [correo]);
 
     //se valida que hayan resultados
     if (rows.length === 0) {
@@ -67,7 +67,7 @@ exports.getUsuarioPorId = async (req, res) => {
 
 
     //se realiza la consulta en la bd.
-    const [rows] = await db.promise().query('SELECT * FROM usuarios WHERE id_usuario = ?', [id]);
+    const [rows] = await db.query('SELECT * FROM usuarios WHERE id_usuario = ?', [id]);
 
     //se valida que hayan resultados
     if (rows.length === 0) {
@@ -93,14 +93,14 @@ exports.saveUser = async (req, res) => {
       return res.status(401).json({ error: 'Los campos no pueden estar vacíos' });
     }
 
-    const [validateEmail] = await db.promise().query('SELECT * FROM usuarios WHERE correo = ?', [correo]);
+    const [validateEmail] = await db.query('SELECT * FROM usuarios WHERE correo = ?', [correo]);
     if (validateEmail.length !== 0) {
       return res.status(404).json({ error: 'Este correo ya existe' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const [saveUsuario] = await db.promise().query('INSERT INTO usuarios (nombre, correo, contraseña) VALUES (?,?,?)'
+    const [saveUsuario] = await db.query('INSERT INTO usuarios (nombre, correo, contraseña) VALUES (?,?,?)'
       , [nombre, correo, hashedPassword]);
     //se crea el token para controlar la sesión del usuario en el front-end
     //Se crea un token JWT válido por 2 horas que contiene datos básicos del usuario.
@@ -167,12 +167,12 @@ exports.updateUsuario = async (req, res) => {
       return res.status(400).json({ error: "Campos vacíos" });
     }
 
-    const [result] = await db.promise().query(
+    const [result] = await db.query(
       'UPDATE usuarios SET nombre = ?, correo = ? WHERE id_usuario = ?',
       [nombre, correo, id_usuario]
     );
 
-    const [rows] = await db.promise().query('SELECT * FROM usuarios WHERE id_usuario = ?', [id_usuario]);
+    const [rows] = await db.query('SELECT * FROM usuarios WHERE id_usuario = ?', [id_usuario]);
 
 
     return res.json({ message: "Usuario actualizado", result, rows });
@@ -193,7 +193,7 @@ exports.changePassword = async (req, res) => {
       return res.status(401).json({ error: 'Los campos no pueden estar vacíos' })
     }
 
-    const [verifyPassword] = await db.promise().query('SELECT * FROM usuarios WHERE id_usuario = ?', [id]);
+    const [verifyPassword] = await db.query('SELECT * FROM usuarios WHERE id_usuario = ?', [id]);
     const usuario = verifyPassword[0];
 
     //se valida la contraseña que viajó en los parametros con la registrada en la bd.
@@ -214,7 +214,7 @@ exports.changePassword = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    const [updatePassword] = await db.promise().query('UPDATE usuarios SET contraseña = ? WHERE id_usuario = ?', [hashedPassword, id]);
+    const [updatePassword] = await db.query('UPDATE usuarios SET contraseña = ? WHERE id_usuario = ?', [hashedPassword, id]);
     res.status(200).json({ message: 'Contraseña actualizada', updatePassword });
 
   } catch (err) {
@@ -231,7 +231,7 @@ exports.forgotPassword = async (req, res) => {
       return res.status(401).json({ error: 'El campo no puede estar vacío' })
     }
 
-    const [validateEmail] = await db.promise().query('SELECT * FROM usuarios WHERE correo = ?', [email]);
+    const [validateEmail] = await db.query('SELECT * FROM usuarios WHERE correo = ?', [email]);
     if (validateEmail.length === 0) {
       return res.status(404).json({ error: 'Este correo no está registrado' });
     }
@@ -292,10 +292,10 @@ exports.updateNewPassword = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const [updatePasswordDb] = await db.promise().query('UPDATE usuarios SET contraseña = ? WHERE id_usuario = ?', [hashedPassword, userId]);
+    const [updatePasswordDb] = await db.query('UPDATE usuarios SET contraseña = ? WHERE id_usuario = ?', [hashedPassword, userId]);
     //console.log(updatePasswordDb);
 
-    const [userInfo] = await db.promise().query('SELECT nombre, correo FROM usuarios WHERE id_usuario = ?', [userId]);
+    const [userInfo] = await db.query('SELECT nombre, correo FROM usuarios WHERE id_usuario = ?', [userId]);
     const usuario = userInfo[0];
 
     const loginLink = "http://localhost:5173/login";

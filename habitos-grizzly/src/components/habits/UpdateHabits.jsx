@@ -9,7 +9,7 @@ export const UpdateHabits = ({ cerrarModalUpdate, habitUnique, setHabitUnique })
 
     const actualizar = async (e) => {
         e.preventDefault();
-        console.log(habitUnique);
+        
         try {
             const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/habits/updateHabit/${habitUnique.id_habito}`,
                 habitUnique);

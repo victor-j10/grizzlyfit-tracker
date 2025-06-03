@@ -44,7 +44,7 @@ export const HabitList = () => {
             try {
                 const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/habits/progresoUpdate`, { newProgreso, idHabito, id });
                 const { message } = response.data;
-                console.log(message);
+                
 
             } catch (error) {
                 if (error.response) {
@@ -83,7 +83,7 @@ export const HabitList = () => {
         const fetchHabits = async () => {
             try {
                 const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/habits/listaHabitos`, { id });
-                console.log(response.data);
+                
                 setHabits(response.data);
                 actualizarProgresoEnBd(response.data);
             } catch (error) {
@@ -155,7 +155,7 @@ export const HabitList = () => {
                 const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/habits/deleteHabit/${id_habito}`, {
                     data: { id_habito } // 👈 el body va dentro de "data"
                 });
-                console.log(response.data);
+                
                 setDeleteHabito(false);
             } catch (error) {
                 if (error.response) {

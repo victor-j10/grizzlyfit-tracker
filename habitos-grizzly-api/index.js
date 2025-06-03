@@ -14,22 +14,10 @@ app.use(cors());
 app.use(express.json());
 //usuario
 app.use('/api/user', usersRoutes);
-app.use('/api/userById', usersRoutes);
-app.use('/api/updateUsuario', usersRoutes);
 //hábitos
 app.use('/api/habits', habitsRoutes);
-app.use('/api/habitsById', habitsRoutes);
-app.use('/api/habitsByCategoria', habitsRoutes);
-app.use('/api/habitInsert', habitsRoutes);
-app.use('/api/habitUpdate', habitsRoutes);
-app.use('/api/updateProgreso', habitsRoutes);
-app.use('/api/habitDelete', habitsRoutes);
 //ejercicios
 app.use('/api/ejercicios', excercisesRoutes);
-app.use('/api/excerciseInsert', excercisesRoutes);
-app.use('/api/excerciseUpdate', excercisesRoutes);
-app.use('/api/excerciseDelete', excercisesRoutes);
-app.use('/api/ejerciciosByCategoria', excercisesRoutes);
 //rutinas
 app.use('/api/rutinas', rutinasRoutes);
 //rutinas completions

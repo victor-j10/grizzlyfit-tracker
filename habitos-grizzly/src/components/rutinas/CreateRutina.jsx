@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { InsertExcerciseToRutina } from './InsertExcerciseToRutina';
+import axios from 'axios';
 
 export const CreateRutina = ({ cerrarModal }) => {
     const { usuario } = useAuth();
@@ -31,27 +32,37 @@ export const CreateRutina = ({ cerrarModal }) => {
         const id_usuario = usuario.id_usuario;
 
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/rutinas/rutinas`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ nombre, tipo_rutina, dia, descripcion, id_usuario })
-            });
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/rutinas/rutinas`,
+                { nombre, tipo_rutina, dia, descripcion, id_usuario });
+            console.log(response.data);
+            const { message, id_rutina } = response.data;
 
-            const data = await res.json();
-            const id_rutina = data.id_rutina;
             form.nombre.value = "";
             form.tipo_rutina.value = "";
             form.dia.value = "";
             form.descripcion.value = "";
-            alert(data.message);
-            
+            alert(message);
+
             if (!id_rutina) {
                 return cerrarModal();
             }
             abrirModalOpenE(id_rutina);
 
-        } catch (err) {
-            console.error("Error al crear la rutina", err);
+
+        } catch (error) {
+            if (error.response) {
+                // Error desde el servidor con status 4xx o 5xx
+                if (error.response.data.message) {
+                    return alert(error.response.data.message);
+                }
+                alert(error.response.data.error);
+            } else if (error.request) {
+                // La petición se hizo pero no hubo respuesta
+                console.error('No hubo respuesta del servidor');
+            } else {
+                // Fallo al construir la petición
+                console.error('Error desconocido:', error.error);
+            }
         }
     }
     return (

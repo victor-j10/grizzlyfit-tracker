@@ -16,6 +16,9 @@ export const UpdateRutina = ({ rutinasTemp, setRutinasTemp, cerrarModalUpdate })
             } catch (error) {
                 if (error.response) {
                     // Error desde el servidor con status 4xx o 5xx
+                    if (error.response.data.message) {
+                        return alert(error.response.data.message);
+                    }
                     alert(error.response.data.error);
                 } else if (error.request) {
                     // La petición se hizo pero no hubo respuesta
@@ -65,13 +68,16 @@ export const UpdateRutina = ({ rutinasTemp, setRutinasTemp, cerrarModalUpdate })
 
             const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/rutinas/updateRutina`, { nombreRutina, tipo_rutina, descripcion, ejercicios, id, id_rutina });
             const { message } = response.data;
-            
+
             alert(message);
             cerrarModalUpdate();
 
         } catch (error) {
             if (error.response) {
                 // Error desde el servidor con status 4xx o 5xx
+                if (error.response.data.message) {
+                    return alert(error.response.data.message);
+                }
                 alert(error.response.data.error);
             } else if (error.request) {
                 // La petición se hizo pero no hubo respuesta

@@ -1,5 +1,7 @@
+import axios from "axios";
+
 export const UpdateExcercises = ({ cerrarModalUpdate, ejerciciosUnique, setEjerciciosUnique }) => {
-    
+
     const handleSubmitUpdate = (e) => {
         e.preventDefault();
         actualizar(e);
@@ -9,16 +11,26 @@ export const UpdateExcercises = ({ cerrarModalUpdate, ejerciciosUnique, setEjerc
     const actualizar = async (e) => {
         e.preventDefault();
         //setHabitUnique(actualizarProgresoUniqueEnBd(habitUnique));
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/excerciseUpdate/updateExcercise/${ejerciciosUnique.id_ejercicio}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(ejerciciosUnique),
-        });
-
-        const data = await res.json();
-        alert("Ejercicio actualizado");
+        try {
+            const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/ejercicios/updateExcercise/${ejerciciosUnique.id_ejercicio}`, ejerciciosUnique );
+            const { message } = response.data;
+            alert(message);
+        } catch (error) {
+            if (error.response) {
+                // Error desde el servidor con status 4xx o 5xx
+                if (error.response.data.message) {
+                    return alert(error.response.data.message);
+                }
+                alert(error.response.data.error);
+            } else if (error.request) {
+                // La petición se hizo pero no hubo respuesta
+                console.error('No hubo respuesta del servidor');
+            } else {
+                // Fallo al construir la petición
+                console.error('Error desconocido:', error.error);
+            }
+        }
+        
 
     }
 

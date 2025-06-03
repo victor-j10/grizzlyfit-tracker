@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { Home } from "./Home";
 import { UpdateHabits } from "./habits/UpdateHabits";
 import { CreateHabits } from "./habits/CreateHabits";
+import axios from "axios";
 
 
 export const HabitList = () => {
@@ -25,64 +26,50 @@ export const HabitList = () => {
     const abrirModal = () => setModalOpen(true);
     const abrirModalUpdate = () => setModalOpenUpdate(true);
     const cerrarModal = () => setModalOpen(false);
-    const cerrarModalUpdate = () => setModalOpenUpdate(false);
-
-
-    const filtrarPorCategoria = async (categoria) => {
-        //alert(e);
-        //validamos que haya un valor, sino, retornamos y no hacemos nada.
-        /* if (!categoria) {
-             limpiarFiltros;
-             return;
-         }*/
-
-        //si hay un valor, enviamos la consulta al backend, junto a la categoría y el id.
-        fetch(`${import.meta.env.VITE_API_URL}/api/habitsByCategoria/listaHabitosPorCategoria`, {
-            method: "POST",
-            //el tipo de contenido
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ categoria, id })
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                //validamos que el array esté lleno
-                if (data.length > 0) {
-                    setHabits(data);
-                    if (!categoria) {
-                        categoriaFiltro.value = ""
-                    }
-
-                } else {
-                    alert("No existen datos con la categoría seleccionada");
-                }
-            })
-            .catch((err) => {
-                console.error("Error al traer habitos: ", err);
-                /*setCargandoHabitos(false)*/
-            });
+    const cerrarModalUpdate = async () => {
+        await actualizarProgresoEnBd(habits);
+        setModalOpenUpdate(false)
     }
 
     const actualizarProgresoEnBd = async (data) => {
+
 
         for (let habit of data) {
             const idHabito = habit.id_habito;
             const fecha_inicioL = habit.fecha_inicio.split('T')[0];
             const fecha_finL = habit.fecha_fin.split('T')[0];
-            const newProgreso = calcularProgreso(fecha_inicioL, fecha_finL);
+            const cumplido = habit.cumplido;
+            const newProgreso = calcularProgreso(fecha_inicioL, fecha_finL, cumplido);
 
-            await fetch(`${import.meta.env.VITE_API_URL}/api/updateProgreso/progresoUpdate`, {
-                method: "PUT",
-                //el tipo de contenido
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ newProgreso, idHabito, id })
-            })
-                .then((res) => res.json())
-                .then((data2) => {
-                    setHabits(data2.rows);
-                    habitosBD(data2.rows);
-                })
-            //conteo = conteo + 1;
+            try {
+                const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/habits/progresoUpdate`, { newProgreso, idHabito, id });
+                const { message } = response.data;
+                console.log(message);
 
+            } catch (error) {
+                if (error.response) {
+                    // Error desde el servidor con status 4xx o 5xx
+                    if (error.response.data.message) {
+                        return alert(error.response.data.message);
+                    }
+                    alert(error.response.data.error);
+                } else if (error.request) {
+                    // La petición se hizo pero no hubo respuesta
+                    console.error('No hubo respuesta del servidor');
+                } else {
+                    // Fallo al construir la petición
+                    console.error('Error desconocido:', error.error);
+                }
+            }
+
+        }
+        // Vuelve a traer los hábitos actualizados desde la BD
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/habits/listaHabitos`, { id });
+            setHabits(response.data);
+            habitosBD(response.data);
+        } catch (error) {
+            alert("Error al refrescar hábitos");
         }
     }
 
@@ -93,28 +80,38 @@ export const HabitList = () => {
         /*if (efectoEjecutado.current) return; // evita segunda ejecución en modo dev
         efectoEjecutado.current = true;*/
 
-        fetch(`${import.meta.env.VITE_API_URL}/api/habitsById/listaHabitos`, {
-            method: "POST",
-            //el tipo de contenido
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id })
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                //validamos los datos obtenidos
-                setHabits(data);
-                actualizarProgresoEnBd(data);
-                //setHabits(data);
+        const fetchHabits = async () => {
+            try {
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/habits/listaHabitos`, { id });
+                console.log(response.data);
+                setHabits(response.data);
+                actualizarProgresoEnBd(response.data);
+            } catch (error) {
+                if (error.response) {
+                    // Error desde el servidor con status 4xx o 5xx
+                    if (error.response.data.message) {
+                        return alert(error.response.data.message);
+                    }
+                    alert(error.response.data.error);
+                } else if (error.request) {
+                    // La petición se hizo pero no hubo respuesta
+                    console.error('No hubo respuesta del servidor');
+                } else {
+                    // Fallo al construir la petición
+                    console.error('Error desconocido:', error.error);
+                }
+            }
+        }
+
+        fetchHabits();
 
 
-            })
-            .catch((err) => {
-                console.error("Error al traer habitos: ", err);
-                /*setCargandoHabitos(false)*/
-            });
     }, [id, modalOpen, modalOpenUpdate, deleteHabito]); //Se vuelve a ejecutar tras agregar o actualizar
 
-    const calcularProgreso = (fecha_inicioL, fecha_finL) => {
+    const calcularProgreso = (fecha_inicioL, fecha_finL, cumplido) => {
+        if (cumplido === 1) {
+            return 100;
+        }
         const hoy = new Date();
         const fechaFormateada = hoy.toISOString().split('T')[0]; // "225-004-23"
 
@@ -122,6 +119,7 @@ export const HabitList = () => {
         const fechaInicioNew = new Date(fecha_inicioL);
         const fechaFinNew = new Date(fecha_finL);
         const fechaHoyNew = new Date(fechaFormateada);
+
 
         if (fechaFormateada < fecha_inicioL) {
             return 0;
@@ -136,27 +134,6 @@ export const HabitList = () => {
         return progresoL;
     }
 
-
-
-
-    /*
-        const buscarPorNombre = (e) => {
-            //alert(e);
-            const resultados = habits.filter(habito =>
-                habito.nombre.toLowerCase().includes(e.toLowerCase())
-            );
-            setHabits(resultados);
-            buscar.value = "";
-        };*/
-
-    /*const filtrarCategoria = (e) => {
-        const resultados = habits.filter(habito =>
-            habito.categoria.toLowerCase().includes(e.categoria.toLowerCase())
-        );
-        setHabits(resultados);
-        return true;
-        
-    }*/
 
     const filtrarHabitos = (habit) => {
         if (filtro === 'todos') return true;
@@ -174,17 +151,29 @@ export const HabitList = () => {
     const eliminar = async (id_habito) => {
         setDeleteHabito(true);
         if (confirm("¿Desea eliminar este hábito?")) {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/habitDelete/deleteHabit/${id_habito}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ id_habito: id_habito }),
-            });
+            try {
+                const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/habits/deleteHabit/${id_habito}`, {
+                    data: { id_habito } // 👈 el body va dentro de "data"
+                });
+                console.log(response.data);
+                setDeleteHabito(false);
+            } catch (error) {
+                if (error.response) {
+                    // Error desde el servidor con status 4xx o 5xx
+                    if (error.response.data.message) {
+                        return alert(error.response.data.message);
+                    }
+                    alert(error.response.data.error);
+                } else if (error.request) {
+                    // La petición se hizo pero no hubo respuesta
+                    console.error('No hubo respuesta del servidor');
+                } else {
+                    // Fallo al construir la petición
+                    console.error('Error desconocido:', error.error);
+                }
+            }
 
-            const data = await res.json();
-            alert("Hábito eliminado");
-            setDeleteHabito(false);
+
         }
 
     }

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useAuth } from '../../contexts/AuthContext';
+import axios from 'axios';
 
 export const CreateExcercises = ({ cerrarModal }) => {
 
@@ -22,17 +23,27 @@ export const CreateExcercises = ({ cerrarModal }) => {
         const id_usuario = usuario.id_usuario;
 
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/excerciseInsert/insertExcercise`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ nombre, descripcion, categoria, sets, reps, id_usuario })
-            });
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/ejercicios/insertExcercise`,
+                { nombre, descripcion, categoria, sets, reps, id_usuario });
+            const { message } = response.data;
+            alert(message);
 
-            const data = await res.json();
-            alert(data.message);
 
-        } catch (err) {
-            console.error("Error al insertar el ejercicio", err);
+
+        } catch (error) {
+            if (error.response) {
+                // Error desde el servidor con status 4xx o 5xx
+                if (error.response.data.message) {
+                    return alert(error.response.data.message);
+                }
+                alert(error.response.data.error);
+            } else if (error.request) {
+                // La petición se hizo pero no hubo respuesta
+                console.error('No hubo respuesta del servidor');
+            } else {
+                // Fallo al construir la petición
+                console.error('Error desconocido:', error.error);
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext"
+import axios from "axios";
 
 export const InsertExcerciseToRutina = ({ cerrarModalOpenE, idRutina }) => {
     const { usuario } = useAuth();
@@ -8,32 +9,38 @@ export const InsertExcerciseToRutina = ({ cerrarModalOpenE, idRutina }) => {
     const id_rutina = idRutina;
     const [ejercicio, setEjercicio] = useState([]);
 
-    
+
 
     useEffect(() => {
         if (!id) {
             return;
         }
 
-        fetch(`${import.meta.env.VITE_API_URL}/api/ejerciciosById/listaEjercicios`, {
-            method: "POST",
-            //el tipo de contenido
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id })
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                //validamos los datos obtenidos
-                setEjercicio(data);
-                //actualizarProgresoEnBd(data);
-                //setHabits(data);
-                
+        const fetchEjercicios = async () => {
+            try {
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/ejercicios/listaEjercicios`, { id });
+                setEjercicio(response.data);
 
-            })
-            .catch((err) => {
-                console.error("Error al traer habitos: ", err);
-                /*setCargandoHabitos(false)*/
-            });
+            } catch (error) {
+                if (error.response) {
+                    // Error desde el servidor con status 4xx o 5xx
+                    if (error.response.data.message) {
+                        return alert(error.response.data.message);
+                    }
+                    alert(error.response.data.error);
+                } else if (error.request) {
+                    // La petición se hizo pero no hubo respuesta
+                    console.error('No hubo respuesta del servidor');
+                } else {
+                    // Fallo al construir la petición
+                    console.error('Error desconocido:', error.error);
+                }
+            }
+        }
+
+        fetchEjercicios();
+
+
 
     }, [id_usuario]);
 
@@ -51,19 +58,28 @@ export const InsertExcerciseToRutina = ({ cerrarModalOpenE, idRutina }) => {
         const duracion_segundos = form.duracion_segundos.value;
 
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/rutinas/insertEjercicios`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ rutina_id, ejercicio_id, orden, duracion_segundos })
-            });
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/rutinas/insertEjercicios`,
+                { rutina_id, ejercicio_id, orden, duracion_segundos });
+            const { message } = response.data;
             form.ejercicio.value = "";
             form.orden.value = null;
             form.duracion_segundos.value = null;
-            const data = await res.json();
-            alert(data.message);
+            alert(message);
 
-        } catch (err) {
-            console.error("Error al crear la rutina", err);
+        } catch (error) {
+            if (error.response) {
+                // Error desde el servidor con status 4xx o 5xx
+                if (error.response.data.message) {
+                    return alert(error.response.data.message);
+                }
+                alert(error.response.data.error);
+            } else if (error.request) {
+                // La petición se hizo pero no hubo respuesta
+                console.error('No hubo respuesta del servidor');
+            } else {
+                // Fallo al construir la petición
+                console.error('Error desconocido:', error.error);
+            }
         }
     }
 

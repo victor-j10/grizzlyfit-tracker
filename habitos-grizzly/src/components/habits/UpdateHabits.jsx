@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const UpdateHabits = ({ cerrarModalUpdate, habitUnique, setHabitUnique }) => {
     const handleSubmitUpdate = (e) => {
         e.preventDefault();
@@ -7,17 +9,29 @@ export const UpdateHabits = ({ cerrarModalUpdate, habitUnique, setHabitUnique })
 
     const actualizar = async (e) => {
         e.preventDefault();
-        //setHabitUnique(actualizarProgresoUniqueEnBd(habitUnique));
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/habitUpdate/updateHabit/${habitUnique.id_habito}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(habitUnique),
-        });
+        console.log(habitUnique);
+        try {
+            const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/habits/updateHabit/${habitUnique.id_habito}`,
+                habitUnique);
+            const { message } = response.data;
+            alert(message);
+            
 
-        const data = await res.json();
-        alert("Hábito actualizado");
+        } catch (error) {
+            if (error.response) {
+                // Error desde el servidor con status 4xx o 5xx
+                if (error.response.data.message) {
+                    return alert(error.response.data.message);
+                }
+                alert(error.response.data.error);
+            } else if (error.request) {
+                // La petición se hizo pero no hubo respuesta
+                console.error('No hubo respuesta del servidor');
+            } else {
+                // Fallo al construir la petición
+                console.error('Error desconocido:', error.error);
+            }
+        }
 
     }
 

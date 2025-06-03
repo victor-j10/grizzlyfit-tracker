@@ -8,7 +8,7 @@ exports.getEjerciciosById = async (req, res) => {
   //try catch para manejo de excepciones y errores.
   try {
     //variable que guardará las filas de la consulta
-    const [rows] = await db.promise().query('SELECT * FROM ejercicios WHERE id_usuario = ?', [id]);
+    const [rows] = await db.query('SELECT * FROM ejercicios WHERE id_usuario = ?', [id]);
 
     //si es igual a cero se retorna el siguiente mensaje
     if (rows.length === 0) {
@@ -32,7 +32,7 @@ exports.saveExcercise = async (req, res) => {
       return res.status(400).json({ message: "Campos vacíos" });
     }
 
-    const [result] = await db.promise().query(
+    const [result] = await db.query(
       'INSERT INTO ejercicios (nombre, descripcion, categoria, sets, reps, id_usuario) VALUES (?,?,?,?,?,?)',
       [nombre, descripcion, categoria, sets, reps, id_usuario]);
 
@@ -53,7 +53,7 @@ exports.updateExcercise = async (req, res) => {
       return res.status(400).json({ error: "Campos vacíos" });
     }
 
-    const [result] = await db.promise().query(
+    const [result] = await db.query(
       'UPDATE ejercicios SET nombre = ?, descripcion = ?, categoria = ?, sets = ?, reps = ? WHERE id_ejercicio = ?',
       [ejercicio.nombre, ejercicio.descripcion, ejercicio.categoria, ejercicio.sets, ejercicio.reps, ejercicio.id_ejercicio]
     );
@@ -77,7 +77,7 @@ exports.deleteExcercise = async (req, res) => {
       return;
     }
 
-    const [result] = await db.promise().query('DELETE FROM ejercicios WHERE id_ejercicio = ?', [id_ejercicio]);
+    const [result] = await db.query('DELETE FROM ejercicios WHERE id_ejercicio = ?', [id_ejercicio]);
     return res.json({ message: "Ejercicio eliminado", result });
 
   } catch (err) {
@@ -91,7 +91,7 @@ exports.getExcercisesByCategoria = async (req, res) => {
   const { categoria, id } = req.body;
 
   if (!categoria) {
-    const [rowss] = await db.promise().query('SELECT * FROM ejercicios WHERE id_usuario = ?', [id]);
+    const [rowss] = await db.query('SELECT * FROM ejercicios WHERE id_usuario = ?', [id]);
 
     if (rowss.length === 0) {
       return res.json([]);
@@ -104,7 +104,7 @@ exports.getExcercisesByCategoria = async (req, res) => {
   //try catch para manejo de excepciones y errores.
   try {
     //variable que guardará las filas de la consulta
-    const [rows] = await db.promise().query('SELECT * FROM ejercicios WHERE categoria = ? AND id_usuario = ?', [categoria, id]);
+    const [rows] = await db.query('SELECT * FROM ejercicios WHERE categoria = ? AND id_usuario = ?', [categoria, id]);
 
     //si es igual a cero se retorna el siguiente mensaje
     if (rows.length === 0) {

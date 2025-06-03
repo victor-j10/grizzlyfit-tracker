@@ -5,7 +5,7 @@ const mailer = require('../utils/mailer');
 //exportamos la función getHabits para obtener los datos del usuario.
 exports.getHabits = async (req, res) => {
   try {
-    const [rows] = await db.promise().query('SELECT * FROM habitos');
+    const [rows] = await db.query('SELECT * FROM habitos');
     res.json(rows);
   } catch (err) {
     console.error(err);
@@ -21,7 +21,7 @@ exports.getHabitsById = async (req, res) => {
   //try catch para manejo de excepciones y errores.
   try {
     //variable que guardará las filas de la consulta
-    const [rows] = await db.promise().query('SELECT * FROM habitos WHERE id_usuario = ?', [id]);
+    const [rows] = await db.query('SELECT * FROM habitos WHERE id_usuario = ?', [id]);
 
     //si es igual a cero se retorna el siguiente mensaje
     if (rows.length === 0) {
@@ -43,7 +43,7 @@ exports.getHabitsByCategoria = async (req, res) => {
   const { categoria, id } = req.body;
 
   if (!categoria) {
-    const [rowss] = await db.promise().query('SELECT * FROM habitos WHERE id_usuario = ?', [id]);
+    const [rowss] = await db.query('SELECT * FROM habitos WHERE id_usuario = ?', [id]);
 
     if (rowss.length === 0) {
       return res.json([]);
@@ -56,7 +56,7 @@ exports.getHabitsByCategoria = async (req, res) => {
   //try catch para manejo de excepciones y errores.
   try {
     //variable que guardará las filas de la consulta
-    const [rows] = await db.promise().query('SELECT * FROM habitos WHERE categoria = ? AND id_usuario = ?', [categoria, id]);
+    const [rows] = await db.query('SELECT * FROM habitos WHERE categoria = ? AND id_usuario = ?', [categoria, id]);
 
     //si es igual a cero se retorna el siguiente mensaje
     if (rows.length === 0) {
@@ -85,7 +85,7 @@ exports.saveHabit = async (req, res) => {
 
 
 
-    const [result] = await db.promise().query(
+    const [result] = await db.query(
       'INSERT INTO habitos (nombre, descripcion, fecha_inicio, fecha_fin, progreso, cumplido, categoria, id_usuario) VALUES (?,?,?,?,?,?,?,?)',
       [nombre, descripcion, fecha_inicio_formateada, fecha_fin_formateada, progreso, cumplido, categoria, id_usuario]
     );
@@ -112,7 +112,7 @@ exports.updateHabit = async (req, res) => {
     const fecha_fin_formateada = new Date(habito.fecha_fin).toISOString().split("T")[0];
 
 
-    const [result] = await db.promise().query(
+    const [result] = await db.query(
       'UPDATE habitos SET nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, progreso = ?, cumplido = ?, categoria = ?, id_usuario = ? WHERE id_habito = ?',
       [habito.nombre, habito.descripcion, fecha_inicio_formateada, fecha_fin_formateada, habito.progreso, habito.cumplido, habito.categoria, habito.id_usuario, habito.id_habito]
     );
@@ -132,7 +132,7 @@ exports.deleteHabit = async (req, res) => {
   //console.log(id_habito);
   try {
 
-    const [result] = await db.promise().query(
+    const [result] = await db.query(
       'DELETE FROM habitos WHERE id_habito = ?',
       [id_habito]
     );
@@ -152,12 +152,12 @@ exports.updateProgreso = async (req, res) => {
 
   try {
 
-    const [rows] = await db.promise().query(
+    const [rows] = await db.query(
       'UPDATE habitos SET progreso = ? WHERE id_habito = ?',
       [newProgreso, idHabito]
     );
 
-    const [rowss] = await db.promise().query('SELECT * FROM habitos WHERE id_usuario = ?', [id]);
+    const [rowss] = await db.query('SELECT * FROM habitos WHERE id_usuario = ?', [id]);
 
     //console.log(rowss);
     return res.json({ message: "Progreso actualizado", response: rows, rows: rowss });
@@ -177,7 +177,7 @@ const obtenerHabitosPorVencer = async () => {
   const mañana = new Date(Date.now() + 86400000).toISOString().split('T')[0]; // hoy + 1 día
 
   //se crea la consulta
-  const [habitos] = await db.promise().query(`
+  const [habitos] = await db.query(`
     SELECT h.*, u.correo, u.nombre as nombre_usuario FROM habitos as h JOIN usuarios as u ON u.id_usuario = h.id_usuario WHERE h.fecha_fin BETWEEN ? AND ? AND h.cumplido = 0
   `, [hoy, mañana]);
 

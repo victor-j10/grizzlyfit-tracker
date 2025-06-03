@@ -11,7 +11,7 @@ exports.saveRutina = async (req, res) => {
         }
 
         //validamos que la rutina no haya sido creada ya
-        const [response] = await db.promise().query(
+        const [response] = await db.query(
             'SELECT r.id_rutina, u.id_usuario, r.dia FROM rutinas as r JOIN usuarios_rutinas as uR on uR.rutina_id = r.id_rutina JOIN usuarios as u on u.id_usuario = uR.usuario_id WHERE r.dia = ? AND u.id_usuario = ?',
             [dia, id_usuario]
         );
@@ -32,11 +32,11 @@ exports.saveRutina = async (req, res) => {
         const diaNumero = diasSemana[dia]; // 2
 
 
-        const [result] = await db.promise().query(
+        const [result] = await db.query(
             'INSERT INTO rutinas (nombre, tipo_rutina, dia, num_dia, descripcion) VALUES (?,?,?,?,?)',
             [nombre, tipo_rutina, dia, diaNumero, descripcion]);
 
-        const [result2] = await db.promise().query(
+        const [result2] = await db.query(
             'INSERT INTO usuarios_rutinas (usuario_id, rutina_id) VALUES (?,?)',
             [id_usuario, result.insertId]
         )
@@ -61,7 +61,7 @@ exports.saveEjerciciosToRutina = async (req, res) => {
             return res.status(400).json({ message: "Campos vacíos" });
         }
 
-        const [response] = await db.promise().query(
+        const [response] = await db.query(
             'SELECT * FROM rutinas_ejercicios WHERE rutina_id = ? AND ejercicio_id = ?',
             [rutina_id, ejercicio_id]
         );
@@ -69,7 +69,7 @@ exports.saveEjerciciosToRutina = async (req, res) => {
             return res.status(401).json({ message: "Ya existe este ejercicio en la rutina" })
         }
 
-        const [result] = await db.promise().query(
+        const [result] = await db.query(
             'INSERT INTO rutinas_ejercicios (rutina_id, ejercicio_id, orden, duracion_segundos) VALUES (?,?,?,?)',
             [rutina_id, ejercicio_id, orden, duracion_segundos]);
 
@@ -85,7 +85,7 @@ exports.getRutinasUser = async (req, res) => {
     const { id_usuario } = req.body;
 
     try {
-        const [rows] = await db.promise().query(
+        const [rows] = await db.query(
             'SELECT r.id_rutina, r.nombre as nombre_rutina, r.tipo_rutina, r.dia, r.descripcion, r_e.orden, e.nombre, e.id_ejercicio, e.sets, e.reps, r_e.id_rutinas_ejercicios ,r_e.duracion_segundos, rCom.completado FROM usuarios_rutinas as u_r JOIN usuarios as u ON u.id_usuario = u_r.usuario_id JOIN rutinas as r ON r.id_rutina = u_r.rutina_id JOIN rutinas_ejercicios as r_e ON r_e.rutina_id = u_r.rutina_id JOIN ejercicios as e ON e.id_ejercicio = r_e.ejercicio_id JOIN rutina_completions as rCom ON rCom.id_rutina = u_r.rutina_id WHERE u.id_usuario = ? ORDER BY r.num_dia, r_e.orden',
             [id_usuario]);
 
@@ -148,7 +148,7 @@ exports.getRutinaByDia = async (req, res) => {
     const { id_usuario, dia } = req.body;
 
     try {
-        const [rows] = await db.promise().query(
+        const [rows] = await db.query(
             'SELECT r.nombre, r.tipo_rutina, r.dia, r_e.orden, e.nombre, e.sets, e.reps, r_e.duracion_segundos FROM usuarios_rutinas as u_r JOIN usuarios as u ON u.id_usuario = u_r.usuario_id JOIN rutinas as r ON r.id_rutina = u_r.rutina_id JOIN rutinas_ejercicios as r_e ON r_e.rutina_id = u_r.rutina_id JOIN ejercicios as e ON e.id_ejercicio = r_e.ejercicio_id WHERE u.id_usuario = ? AND r.dia = ? ORDER BY r_e.orden',
             [id_usuario, dia]);
 
@@ -166,12 +166,12 @@ exports.deleteRutina = async (req, res) => {
     //console.log(id_usuario)
 
     try {
-        const [deleteUsuarioRutina] = await db.promise().query(
+        const [deleteUsuarioRutina] = await db.query(
             'DELETE FROM usuarios_rutinas WHERE usuario_id = ? AND rutina_id = ?',
             [id_rutina, id_usuario]
         )
 
-        const [deleteRutina] = await db.promise().query(
+        const [deleteRutina] = await db.query(
             'DELETE FROM rutinas WHERE id_rutina = ?',
             [id_rutina]
         )
@@ -200,7 +200,7 @@ exports.updateRutina = async (req, res) => {
         }
 
         //update a tablas rutinas
-        const [updateRutina] = await db.promise().query('UPDATE rutinas SET nombre = ?, tipo_rutina = ?, descripcion = ? WHERE id_rutina = ?',
+        const [updateRutina] = await db.query('UPDATE rutinas SET nombre = ?, tipo_rutina = ?, descripcion = ? WHERE id_rutina = ?',
             [nombreRutina, tipo_rutina, descripcion, id_rutina]
         );
 
@@ -214,7 +214,7 @@ exports.updateRutina = async (req, res) => {
             const orden = ejercicios[i].orden;
             const duracion_segundos = ejercicios[i].duracion_segundos;
             const id_rutinas_ejercicios = ejercicios[i].id_rutinas_ejercicios;
-            const [updateRutinaEjercicios] = await db.promise().query('UPDATE rutinas_ejercicios SET ejercicio_id = ?, orden = ?, duracion_segundos = ? WHERE id_rutinas_ejercicios = ?',
+            const [updateRutinaEjercicios] = await db.query('UPDATE rutinas_ejercicios SET ejercicio_id = ?, orden = ?, duracion_segundos = ? WHERE id_rutinas_ejercicios = ?',
                 [id_ejercicio, orden, duracion_segundos, id_rutinas_ejercicios]
             );
 

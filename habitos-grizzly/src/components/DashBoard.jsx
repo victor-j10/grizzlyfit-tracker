@@ -28,7 +28,7 @@ export const DashBoard = () => {
         if (!id) return;
         const fetchHabitsExcercises = async () => {
             try {
-                const responseHabits = await axios.post(`${import.meta.env.VITE_API_URL}/api/habitsById/listaHabitos`, { id });
+                const responseHabits = await axios.post(`${import.meta.env.VITE_API_URL}/api/habits/listaHabitos`, { id });
                 setHabits(responseHabits.data);
 
                 const responseExcercises = await axios.post(`${import.meta.env.VITE_API_URL}/api/ejercicios/listaEjercicios`, { id });
@@ -42,6 +42,9 @@ export const DashBoard = () => {
             } catch (error) {
                 if (error.response) {
                     // Error desde el servidor con status 4xx o 5xx
+                    if (error.response.data.message) {
+                        return alert(error.response.data.message);
+                    }
                     alert(error.response.data.error);
                 } else if (error.request) {
                     // La petición se hizo pero no hubo respuesta

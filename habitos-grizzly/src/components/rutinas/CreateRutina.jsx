@@ -34,7 +34,7 @@ export const CreateRutina = ({ cerrarModal }) => {
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/rutinas/rutinas`,
                 { nombre, tipo_rutina, dia, descripcion, id_usuario });
-            console.log(response.data);
+            
             const { message, id_rutina } = response.data;
 
             form.nombre.value = "";
